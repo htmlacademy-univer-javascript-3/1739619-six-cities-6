@@ -1,8 +1,12 @@
 import MainScreen from '../../pages/main-screen/main-screen.tsx';
 
-function App() {
+type AppProps = {
+  offersCount: number;
+};
+
+function App({ offersCount }: AppProps) {
   return (
-    <MainScreen/>
+    <MainScreen offersCount={offersCount}/>
   );
 }
 
