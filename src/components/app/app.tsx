@@ -4,10 +4,8 @@ type AppProps = {
   offersCount: number;
 };
 
-function App({ offersCount }: AppProps) {
+export default function App({ offersCount }: AppProps) {
   return (
     <MainScreen offersCount={offersCount}/>
   );
 }
-
-export default App;
