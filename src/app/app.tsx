@@ -1,17 +1,18 @@
-import {Route, BrowserRouter, Routes} from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import MainScreen from '../pages/main-screen/main-screen.tsx';
 import AuthScreen from '../pages/auth-screen/auth-screen.tsx';
-import FavoritesScreen from '../pages/favorites-screen/favorites-screen.tsx';
 import OffersScreen from '../pages/offer-screen/offer-screen.tsx';
 import NotFoundPage from '../pages/not-found-page/not-found-page.tsx';
+import PrivateRoute from '../components/protected-route/protected-route.tsx';
 
-import {AppRoute} from '../const.ts';
+import {AppRoute, AuthorizationStatus} from '../const.ts';
+import FavoritesScreen from '../pages/favorites-screen/favorites-screen.tsx';
 
 type AppProps = {
   offersCount: number;
 };
 
-export default function App({ offersCount }: AppProps) {
+export default function App({offersCount}: AppProps) {
   return (
     <BrowserRouter>
       <Routes>
@@ -21,7 +22,11 @@ export default function App({ offersCount }: AppProps) {
         />
         <Route
           path={AppRoute.Login}
-          element={<AuthScreen/>}
+          element={
+            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
+              <AuthScreen/>
+            </PrivateRoute>
+          }
         />
         <Route
           path={AppRoute.Favorites}
@@ -32,7 +37,7 @@ export default function App({ offersCount }: AppProps) {
           element={<OffersScreen/>}
         />
         <Route
-          path='*'
+          path="*"
           element={<NotFoundPage/>}
         />
       </Routes>
