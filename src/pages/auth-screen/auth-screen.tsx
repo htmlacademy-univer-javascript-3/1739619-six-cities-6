@@ -1,4 +1,4 @@
-export default function LoginScreen() {
+export default function AuthScreen() {
   return (
     <div className="page page--gray page--login">
       <header className="header">
