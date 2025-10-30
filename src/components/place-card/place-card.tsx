@@ -1,24 +1,58 @@
-export default function PlaceCard(): JSX.Element {
+import {OfferPreview} from '../../types/offers-preview.ts';
+
+type PlaceCardProps = {
+  offer: OfferPreview;
+  variant?: 'cities' | 'favorites';
+};
+
+const CARD_CLASS_MAP = {
+  cities: 'cities__card place-card',
+  favorites: 'favorites__card place-card',
+} as const;
+
+const IMAGE_WRAPPER_CLASS_MAP = {
+  cities: 'cities__image-wrapper place-card__image-wrapper',
+  favorites: 'favorites__image-wrapper place-card__image-wrapper',
+} as const;
+
+const INFO_CLASS_MAP = {
+  cities: 'place-card__info',
+  favorites: 'favorites__card-info place-card__info',
+} as const;
+
+const IMAGE_SIZE_MAP = {
+  cities: {width: 260, height: 200},
+  favorites: {width: 150, height: 110},
+} as const;
+
+export default function PlaceCard({offer, variant = 'cities'}: PlaceCardProps) {
+  const {previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
+
+  const ratingWidth = `${rating * 20}%`;
+  const bookmarkButtonText = isFavorite ? 'In bookmarks' : 'To bookmarks';
+
   return (
-    <article className="cities__card place-card">
-      <div className="place-card__mark">
-        <span>Premium</span>
-      </div>
-      <div className="cities__image-wrapper place-card__image-wrapper">
+    <article className={`${CARD_CLASS_MAP[variant]}`}>
+      {isPremium && (
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>
+      )}
+      <div className={IMAGE_WRAPPER_CLASS_MAP[variant]}>
         <a href="#">
           <img
             className="place-card__image"
-            src="../../../markup/img/apartment-01.jpg"
-            width={260}
-            height={200}
+            src={previewImage}
+            width={IMAGE_SIZE_MAP[variant].width}
+            height={IMAGE_SIZE_MAP[variant].height}
             alt="Place image"
           />
         </a>
       </div>
-      <div className="place-card__info">
+      <div className={INFO_CLASS_MAP[variant]}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€120</b>
+            <b className="place-card__price-value">€{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
@@ -32,21 +66,21 @@ export default function PlaceCard(): JSX.Element {
             >
               <use xlinkHref="#icon-bookmark" />
             </svg>
-            <span className="visually-hidden">To bookmarks</span>
+            <span className="visually-hidden">{bookmarkButtonText}</span>
           </button>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }} />
+            <span style={{ width: ratingWidth }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
           <a href="#">
-            Beautiful &amp; luxurious apartment at great location
+            {title}
           </a>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );
