@@ -1,3 +1,6 @@
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const.ts';
+
 export default function AuthScreen() {
   return (
     <div className="page page--gray page--login">
@@ -5,7 +8,7 @@ export default function AuthScreen() {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="../../../markup/main.html">
+              <Link to={AppRoute.Main} className="header__logo-link">
                 <img
                   className="header__logo"
                   src="../../../markup/img/logo.svg"
@@ -13,7 +16,7 @@ export default function AuthScreen() {
                   width={81}
                   height={41}
                 />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -50,9 +53,9 @@ export default function AuthScreen() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
+              <Link to={AppRoute.Main} className="locations__item-link">
                 <span>Amsterdam</span>
-              </a>
+              </Link>
             </div>
           </section>
         </div>

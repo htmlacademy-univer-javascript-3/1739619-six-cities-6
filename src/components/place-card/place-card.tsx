@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 
 type PlaceCardProps = {
@@ -35,7 +37,7 @@ export default function PlaceCard({
   onMouseEnter,
   onMouseLeave,
 }: PlaceCardProps) {
-  const {previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
+  const {id, previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
 
   const ratingWidth = `${rating * 20}%`;
   const bookmarkButtonClassName = `place-card__bookmark-button button${isFavorite ? ' place-card__bookmark-button--active' : ''}`;
@@ -53,7 +55,7 @@ export default function PlaceCard({
         </div>
       )}
       <div className={IMAGE_WRAPPER_CLASS_MAP[variant]}>
-        <a href="#">
+        <Link to={`${AppRoute.Offer}/${id}`}>
           <img
             className="place-card__image"
             src={previewImage}
@@ -61,7 +63,7 @@ export default function PlaceCard({
             height={IMAGE_SIZE_MAP[variant].height}
             alt="Place image"
           />
-        </a>
+        </Link>
       </div>
       <div className={INFO_CLASS_MAP[variant]}>
         <div className="place-card__price-wrapper">
@@ -90,9 +92,9 @@ export default function PlaceCard({
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">
+          <Link to={`${AppRoute.Offer}/${id}`}>
             {title}
-          </a>
+          </Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

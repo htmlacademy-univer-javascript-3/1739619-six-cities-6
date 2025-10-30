@@ -24,7 +24,7 @@ export default function App({offers}: AppProps) {
         <Route
           path={AppRoute.Login}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
+            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
               <AuthScreen/>
             </PrivateRoute>
           }
@@ -35,7 +35,7 @@ export default function App({offers}: AppProps) {
         />
         <Route
           path={`${AppRoute.Offer}/:offerId`}
-          element={<OffersScreen offers={offers}/>}
+          element={<OffersScreen/>}
         />
         <Route
           path="*"

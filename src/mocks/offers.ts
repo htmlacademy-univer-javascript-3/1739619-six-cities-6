@@ -41,7 +41,7 @@ export const offers: Offer[] = [
       avatarUrl: 'https://14.design.htmlacademy.pro/static/host/avatar-angelina.jpg'
     },
     isPremium: true,
-    isFavorite: false,
+    isFavorite: true,
     rating: 2.5,
     bedrooms: 4,
     maxAdults: 7

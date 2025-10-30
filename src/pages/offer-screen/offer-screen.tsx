@@ -1,3 +1,6 @@
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const.ts';
+
 export default function OfferScreen() {
   return (
     <div className="page">
@@ -5,7 +8,7 @@ export default function OfferScreen() {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="../../../markup/main.html">
+              <Link to={AppRoute.Main} className="header__logo-link">
                 <img
                   className="header__logo"
                   src="../../../markup/img/logo.svg"
@@ -13,26 +16,26 @@ export default function OfferScreen() {
                   width={81}
                   height={41}
                 />
-              </a>
+              </Link>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a
+                  <Link
                     className="header__nav-link header__nav-link--profile"
-                    href="#"
+                    to={AppRoute.Favorites}
                   >
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
                     </span>
                     <span className="header__favorite-count">3</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
+                  <Link className="header__nav-link" to={AppRoute.Login}>
                     <span className="header__signout">Sign out</span>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
