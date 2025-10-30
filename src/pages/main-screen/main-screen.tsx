@@ -1,11 +1,11 @@
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 
-type MainPageProps = {
+type MainScreenProps = {
   offers: OfferPreview[];
 };
 
-export default function MainScreen({offers}: MainPageProps) {
+export default function MainScreen({offers}: MainScreenProps) {
   const offersCount = offers.length;
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
 
