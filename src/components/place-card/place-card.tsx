@@ -3,6 +3,9 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 type PlaceCardProps = {
   offer: OfferPreview;
   variant?: 'cities' | 'favorites';
+  isActive?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 };
 
 const CARD_CLASS_MAP = {
@@ -25,14 +28,25 @@ const IMAGE_SIZE_MAP = {
   favorites: {width: 150, height: 110},
 } as const;
 
-export default function PlaceCard({offer, variant = 'cities'}: PlaceCardProps) {
+export default function PlaceCard({
+  offer,
+  variant = 'cities',
+  isActive = false,
+  onMouseEnter,
+  onMouseLeave,
+}: PlaceCardProps) {
   const {previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
 
   const ratingWidth = `${rating * 20}%`;
+  const bookmarkButtonClassName = `place-card__bookmark-button button${isFavorite ? ' place-card__bookmark-button--active' : ''}`;
   const bookmarkButtonText = isFavorite ? 'In bookmarks' : 'To bookmarks';
 
   return (
-    <article className={`${CARD_CLASS_MAP[variant]}`}>
+    <article
+      className={`${CARD_CLASS_MAP[variant]}${isActive ? ' place-card--active' : ''}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>
@@ -56,7 +70,7 @@ export default function PlaceCard({offer, variant = 'cities'}: PlaceCardProps) {
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <button
-            className="place-card__bookmark-button button"
+            className={bookmarkButtonClassName}
             type="button"
           >
             <svg
