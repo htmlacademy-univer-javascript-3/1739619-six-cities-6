@@ -1,10 +1,14 @@
-import PlaceCard from '../../components/place-card/place-card.tsx';
+import OffersList from '../../components/offers-list/offers-list.tsx';
+import {OfferPreview} from '../../types/offers-preview.ts';
 
 type MainPageProps = {
-  offersCount: number;
+  offers: OfferPreview[];
 };
 
-export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
+export default function MainScreen({offers}: MainPageProps) {
+  const offersCount = offers.length;
+  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -32,7 +36,7 @@ export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
                     </span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">{favoriteOffersCount}</span>
                   </a>
                 </li>
                 <li className="header__nav-item">
@@ -91,7 +95,7 @@ export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
-              Popular
+                  Popular
                   <svg className="places__sorting-arrow" width={7} height={4}>
                     <use xlinkHref="#icon-arrow-select"/>
                   </svg>
@@ -114,13 +118,7 @@ export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <PlaceCard/>
-                <PlaceCard/>
-                <PlaceCard/>
-                <PlaceCard/>
-                <PlaceCard/>
-              </div>
+              <OffersList offers={offers}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"/>
