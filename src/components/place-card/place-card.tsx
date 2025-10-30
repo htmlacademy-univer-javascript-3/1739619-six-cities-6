@@ -4,7 +4,7 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 
 type PlaceCardProps = {
   offer: OfferPreview;
-  variant?: 'cities' | 'favorites';
+  variant?: 'cities' | 'favorites' | 'near-places';
   isActive?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
@@ -13,21 +13,25 @@ type PlaceCardProps = {
 const CARD_CLASS_MAP = {
   cities: 'cities__card place-card',
   favorites: 'favorites__card place-card',
+  'near-places': 'near-places__card place-card',
 } as const;
 
 const IMAGE_WRAPPER_CLASS_MAP = {
   cities: 'cities__image-wrapper place-card__image-wrapper',
   favorites: 'favorites__image-wrapper place-card__image-wrapper',
+  'near-places': 'near-places__image-wrapper place-card__image-wrapper',
 } as const;
 
 const INFO_CLASS_MAP = {
   cities: 'place-card__info',
   favorites: 'favorites__card-info place-card__info',
+  'near-places': 'place-card__info',
 } as const;
 
 const IMAGE_SIZE_MAP = {
   cities: {width: 260, height: 200},
   favorites: {width: 150, height: 110},
+  'near-places': {width: 260, height: 200},
 } as const;
 
 export default function PlaceCard({

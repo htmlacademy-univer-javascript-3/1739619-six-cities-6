@@ -10,7 +10,7 @@ export default function CommentForm() {
     setFormState((prevState) => ({...prevState, [name]: value}));
   };
 
-  const isSubmitDisabled = formState.rating === 0 || formState.review.trim().length < 50;
+  const isSubmitDisabled = formState.review.trim().length < 50;
 
   return (
     <form className="reviews__form form" action="#" method="post">

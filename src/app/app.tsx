@@ -35,7 +35,7 @@ export default function App({offers}: AppProps) {
         />
         <Route
           path={`${AppRoute.Offer}/:offerId`}
-          element={<OffersScreen/>}
+          element={<OffersScreen offers={offers}/>}
         />
         <Route
           path="*"

@@ -1,7 +1,32 @@
-import {Link} from 'react-router-dom';
+import {Link, useParams, Navigate} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
+import {Offer} from '../../types/offer';
+import CommentForm from '../../components/comment-form/comment-form.tsx';
+import PlaceCard from '../../components/place-card/place-card.tsx';
 
-export default function OfferScreen() {
+type OfferScreenProps = {
+  offers: Offer[];
+};
+
+export default function OfferScreen({offers}: OfferScreenProps) {
+  const offerId = useParams<{offerId: string}>();
+  const currentOffer = offers.find((offer) => offer.id === String(offerId.offerId));
+
+  if (!currentOffer) {
+    return <Navigate to={AppRoute.Main}/>;
+  }
+
+  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
+  const nearbyOffers = offers
+    .filter((offer) => offer.id !== currentOffer.id && offer.city.name === currentOffer.city.name)
+    .slice(0, 3);
+  const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
+  const bookmarkButtonClassName = `offer__bookmark-button button${currentOffer.isFavorite ? ' offer__bookmark-button--active' : ''}`;
+  const bookmarkButtonText = currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks';
+  const offerType = `${currentOffer.type.charAt(0).toUpperCase()}${currentOffer.type.slice(1)}`;
+  const bedroomsText = `${currentOffer.bedrooms} Bedroom${currentOffer.bedrooms !== 1 ? 's' : ''}`;
+  const adultsText = `Max ${currentOffer.maxAdults} adult${currentOffer.maxAdults !== 1 ? 's' : ''}`;
+
   return (
     <div className="page">
       <header className="header">
@@ -29,7 +54,7 @@ export default function OfferScreen() {
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
                     </span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">{favoriteOffersCount}</span>
                   </Link>
                 </li>
                 <li className="header__nav-item">
@@ -46,127 +71,82 @@ export default function OfferScreen() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="../../../markup/img/room.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="../../../markup/img/apartment-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="../../../markup/img/apartment-02.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="../../../markup/img/apartment-03.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="../../../markup/img/studio-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="../../../markup/img/apartment-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
+              {currentOffer.images.map((image) => (
+                <div className="offer__image-wrapper" key={image}>
+                  <img
+                    className="offer__image"
+                    src={image}
+                    alt={`Photo ${currentOffer.title}`}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
-              <div className="offer__mark">
-                <span>Premium</span>
-              </div>
+              {currentOffer.isPremium && (
+                <div className="offer__mark">
+                  <span>Premium</span>
+                </div>
+              )}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">
-                  Beautiful &amp; luxurious studio at great location
+                  {currentOffer.title}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button className={bookmarkButtonClassName} type="button">
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
-                  <span className="visually-hidden">To bookmarks</span>
+                  <span className="visually-hidden">{bookmarkButtonText}</span>
                 </button>
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{ width: '80%' }} />
+                  <span style={{ width: ratingWidth }} />
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">4.8</span>
+                <span className="offer__rating-value rating__value">
+                  {currentOffer.rating.toFixed(1)}
+                </span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">Apartment</li>
-                <li className="offer__feature offer__feature--bedrooms">
-                  3 Bedrooms
-                </li>
-                <li className="offer__feature offer__feature--adults">
-                  Max 4 adults
-                </li>
+                <li className="offer__feature offer__feature--entire">{offerType}</li>
+                <li className="offer__feature offer__feature--bedrooms">{bedroomsText}</li>
+                <li className="offer__feature offer__feature--adults">{adultsText}</li>
               </ul>
               <div className="offer__price">
-                <b className="offer__price-value">€120</b>
+                <b className="offer__price-value">€{currentOffer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">{'What\'s inside'}</h2>
                 <ul className="offer__inside-list">
-                  <li className="offer__inside-item">Wi-Fi</li>
-                  <li className="offer__inside-item">Washing machine</li>
-                  <li className="offer__inside-item">Towels</li>
-                  <li className="offer__inside-item">Heating</li>
-                  <li className="offer__inside-item">Coffee machine</li>
-                  <li className="offer__inside-item">Baby seat</li>
-                  <li className="offer__inside-item">Kitchen</li>
-                  <li className="offer__inside-item">Dishwasher</li>
-                  <li className="offer__inside-item">Cabel TV</li>
-                  <li className="offer__inside-item">Fridge</li>
+                  {currentOffer.goods.map((good) => (
+                    <li className="offer__inside-item" key={good}>
+                      {good}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
+                  <div className={`offer__avatar-wrapper user__avatar-wrapper${currentOffer.host.isPro ? ' offer__avatar-wrapper--pro' : ''}`}>
                     <img
                       className="offer__avatar user__avatar"
-                      src="../../../markup/img/avatar-angelina.jpg"
+                      src={currentOffer.host.avatarUrl}
                       width={74}
                       height={74}
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">Angelina</span>
-                  <span className="offer__user-status">Pro</span>
+                  <span className="offer__user-name">{currentOffer.host.name}</span>
+                  {currentOffer.host.isPro && (
+                    <span className="offer__user-status">Pro</span>
+                  )}
                 </div>
                 <div className="offer__description">
-                  <p className="offer__text">
-                    A quiet cozy and picturesque that hides behind a a river by the
-                    unique lightness of Amsterdam. The building is green and from
-                    18th century.
-                  </p>
-                  <p className="offer__text">
-                    An independent House, strategically located between Rembrand
-                    Square and National Opera, but where the bustle of the city
-                    comes to rest in this alley flowery and colorful.
-                  </p>
+                  <p className="offer__text">{currentOffer.description}</p>
                 </div>
               </div>
               <section className="offer__reviews reviews">
@@ -205,115 +185,7 @@ export default function OfferScreen() {
                     </div>
                   </li>
                 </ul>
-                <form className="reviews__form form" action="#" method="post">
-                  <label className="reviews__label form__label" htmlFor="review">
-                    Your review
-                  </label>
-                  <div className="reviews__rating-form form__rating">
-                    <input
-                      className="form__rating-input visually-hidden"
-                      name="rating"
-                      defaultValue={5}
-                      id="5-stars"
-                      type="radio"
-                    />
-                    <label
-                      htmlFor="5-stars"
-                      className="reviews__rating-label form__rating-label"
-                      title="perfect"
-                    >
-                      <svg className="form__star-image" width={37} height={33}>
-                        <use xlinkHref="#icon-star" />
-                      </svg>
-                    </label>
-                    <input
-                      className="form__rating-input visually-hidden"
-                      name="rating"
-                      defaultValue={4}
-                      id="4-stars"
-                      type="radio"
-                    />
-                    <label
-                      htmlFor="4-stars"
-                      className="reviews__rating-label form__rating-label"
-                      title="good"
-                    >
-                      <svg className="form__star-image" width={37} height={33}>
-                        <use xlinkHref="#icon-star" />
-                      </svg>
-                    </label>
-                    <input
-                      className="form__rating-input visually-hidden"
-                      name="rating"
-                      defaultValue={3}
-                      id="3-stars"
-                      type="radio"
-                    />
-                    <label
-                      htmlFor="3-stars"
-                      className="reviews__rating-label form__rating-label"
-                      title="not bad"
-                    >
-                      <svg className="form__star-image" width={37} height={33}>
-                        <use xlinkHref="#icon-star" />
-                      </svg>
-                    </label>
-                    <input
-                      className="form__rating-input visually-hidden"
-                      name="rating"
-                      defaultValue={2}
-                      id="2-stars"
-                      type="radio"
-                    />
-                    <label
-                      htmlFor="2-stars"
-                      className="reviews__rating-label form__rating-label"
-                      title="badly"
-                    >
-                      <svg className="form__star-image" width={37} height={33}>
-                        <use xlinkHref="#icon-star" />
-                      </svg>
-                    </label>
-                    <input
-                      className="form__rating-input visually-hidden"
-                      name="rating"
-                      defaultValue={1}
-                      id="1-star"
-                      type="radio"
-                    />
-                    <label
-                      htmlFor="1-star"
-                      className="reviews__rating-label form__rating-label"
-                      title="terribly"
-                    >
-                      <svg className="form__star-image" width={37} height={33}>
-                        <use xlinkHref="#icon-star" />
-                      </svg>
-                    </label>
-                  </div>
-                  <textarea
-                    className="reviews__textarea form__textarea"
-                    id="review"
-                    name="review"
-                    placeholder="Tell how was your stay, what you like and what can be improved"
-                    defaultValue={''}
-                  />
-                  <div className="reviews__button-wrapper">
-                    <p className="reviews__help">
-                      To submit review please make sure to set{' '}
-                      <span className="reviews__star">rating</span> and describe
-                      your stay with at least{' '}
-                      <b className="reviews__text-amount">50 characters</b>.
-                    </p>
-                    <button
-                      className="reviews__submit form__submit button"
-                      type="submit"
-                      disabled
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </form>
+                <CommentForm/>
               </section>
             </div>
           </div>
@@ -325,141 +197,9 @@ export default function OfferScreen() {
               Other places in the neighbourhood
             </h2>
             <div className="near-places__list places__list">
-              <article className="near-places__card place-card">
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img
-                      className="place-card__image"
-                      src="../../../markup/img/room.jpg"
-                      width={260}
-                      height={200}
-                      alt="Place image"
-                    />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">€80</b>
-                      <span className="place-card__price-text">/&nbsp;night</span>
-                    </div>
-                    <button
-                      className="place-card__bookmark-button place-card__bookmark-button--active button"
-                      type="button"
-                    >
-                      <svg
-                        className="place-card__bookmark-icon"
-                        width={18}
-                        height={19}
-                      >
-                        <use xlinkHref="#icon-bookmark" />
-                      </svg>
-                      <span className="visually-hidden">In bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{ width: '80%' }} />
-                      <span className="visually-hidden">Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Wood and stone place</a>
-                  </h2>
-                  <p className="place-card__type">Room</p>
-                </div>
-              </article>
-              <article className="near-places__card place-card">
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img
-                      className="place-card__image"
-                      src="../../../markup/img/apartment-02.jpg"
-                      width={260}
-                      height={200}
-                      alt="Place image"
-                    />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">€132</b>
-                      <span className="place-card__price-text">/&nbsp;night</span>
-                    </div>
-                    <button
-                      className="place-card__bookmark-button button"
-                      type="button"
-                    >
-                      <svg
-                        className="place-card__bookmark-icon"
-                        width={18}
-                        height={19}
-                      >
-                        <use xlinkHref="#icon-bookmark" />
-                      </svg>
-                      <span className="visually-hidden">To bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{ width: '80%' }} />
-                      <span className="visually-hidden">Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Canal View Prinsengracht</a>
-                  </h2>
-                  <p className="place-card__type">Apartment</p>
-                </div>
-              </article>
-              <article className="near-places__card place-card">
-                <div className="place-card__mark">
-                  <span>Premium</span>
-                </div>
-                <div className="near-places__image-wrapper place-card__image-wrapper">
-                  <a href="#">
-                    <img
-                      className="place-card__image"
-                      src="../../../markup/img/apartment-03.jpg"
-                      width={260}
-                      height={200}
-                      alt="Place image"
-                    />
-                  </a>
-                </div>
-                <div className="place-card__info">
-                  <div className="place-card__price-wrapper">
-                    <div className="place-card__price">
-                      <b className="place-card__price-value">€180</b>
-                      <span className="place-card__price-text">/&nbsp;night</span>
-                    </div>
-                    <button
-                      className="place-card__bookmark-button button"
-                      type="button"
-                    >
-                      <svg
-                        className="place-card__bookmark-icon"
-                        width={18}
-                        height={19}
-                      >
-                        <use xlinkHref="#icon-bookmark" />
-                      </svg>
-                      <span className="visually-hidden">To bookmarks</span>
-                    </button>
-                  </div>
-                  <div className="place-card__rating rating">
-                    <div className="place-card__stars rating__stars">
-                      <span style={{ width: '100%' }} />
-                      <span className="visually-hidden">Rating</span>
-                    </div>
-                  </div>
-                  <h2 className="place-card__name">
-                    <a href="#">Nice, cozy, warm big bed apartment</a>
-                  </h2>
-                  <p className="place-card__type">Apartment</p>
-                </div>
-              </article>
+              {nearbyOffers.map((offer) => (
+                <PlaceCard key={offer.id} offer={offer} variant="near-places" />
+              ))}
             </div>
           </section>
         </div>
