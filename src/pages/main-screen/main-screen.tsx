@@ -1,17 +1,23 @@
-import PlaceCard from '../../components/place-card/place-card.tsx';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const.ts';
+import OffersList from '../../components/offers-list/offers-list.tsx';
+import {OfferPreview} from '../../types/offers-preview.ts';
 
-type MainPageProps = {
-  offersCount: number;
+type MainScreenProps = {
+  offers: OfferPreview[];
 };
 
-export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
+export default function MainScreen({offers}: MainScreenProps) {
+  const offersCount = offers.length;
+  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link header__logo-link--active">
+              <Link className="header__logo-link header__logo-link--active" to={AppRoute.Main}>
                 <img
                   className="header__logo"
                   src="../../../markup/img/logo.svg"
@@ -19,26 +25,26 @@ export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
                   width={81}
                   height={41}
                 />
-              </a>
+              </Link>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a
+                  <Link
                     className="header__nav-link header__nav-link--profile"
-                    href="#"
+                    to={AppRoute.Favorites}
                   >
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
                     </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
+                    <span className="header__favorite-count">{favoriteOffersCount}</span>
+                  </Link>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
+                  <Link className="header__nav-link" to={AppRoute.Login}>
                     <span className="header__signout">Sign out</span>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -91,7 +97,7 @@ export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
-              Popular
+                  Popular
                   <svg className="places__sorting-arrow" width={7} height={4}>
                     <use xlinkHref="#icon-arrow-select"/>
                   </svg>
@@ -114,13 +120,7 @@ export default function MainScreen({offersCount}: MainPageProps): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <PlaceCard/>
-                <PlaceCard/>
-                <PlaceCard/>
-                <PlaceCard/>
-                <PlaceCard/>
-              </div>
+              <OffersList offers={offers}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"/>
