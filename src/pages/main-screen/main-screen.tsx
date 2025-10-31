@@ -2,6 +2,7 @@ import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
+import Map from '../../components/map/map.tsx';
 
 type MainScreenProps = {
   offers: OfferPreview[];
@@ -10,6 +11,7 @@ type MainScreenProps = {
 export default function MainScreen({offers}: MainScreenProps) {
   const offersCount = offers.length;
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
+  const currentCity = offers[0]?.city;
 
   return (
     <div className="page page--gray page--main">
@@ -123,7 +125,7 @@ export default function MainScreen({offers}: MainScreenProps) {
               <OffersList offers={offers}/>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"/>
+              <Map city={currentCity} offers={offers}/>
             </div>
           </div>
         </div>

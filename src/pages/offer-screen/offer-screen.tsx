@@ -1,4 +1,4 @@
-import {Link, useParams, Navigate} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
 import {Offer} from '../../types/offer';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
@@ -13,7 +13,9 @@ export default function OfferScreen({offers}: OfferScreenProps) {
   const currentOffer = offers.find((offer) => offer.id === String(offerId.offerId));
 
   if (!currentOffer) {
-    return <Navigate to={AppRoute.Main}/>;
+    return (
+      <h1>Такого предложения нет</h1>
+    );
   }
 
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
