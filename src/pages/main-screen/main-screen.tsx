@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
@@ -12,6 +13,7 @@ export default function MainScreen({offers}: MainScreenProps) {
   const offersCount = offers.length;
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
   const currentCity = offers[0]?.city;
+  const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
 
   return (
     <div className="page page--gray page--main">
@@ -122,10 +124,21 @@ export default function MainScreen({offers}: MainScreenProps) {
                   </li>
                 </ul>
               </form>
-              <OffersList offers={offers}/>
+              <OffersList
+                offers={offers}
+                setSelectedOfferId={setSelectedOfferId}
+              />
             </section>
             <div className="cities__right-section">
-              <Map city={currentCity} offers={offers}/>
+              {currentCity && offers.length > 0 ? (
+                <Map
+                  city={currentCity}
+                  offers={offers}
+                  selectedOfferId={selectedOfferId}
+                />
+              ) : (
+                <section className="cities__map map" />
+              )}
             </div>
           </div>
         </div>

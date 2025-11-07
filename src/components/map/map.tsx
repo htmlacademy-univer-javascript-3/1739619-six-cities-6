@@ -1,5 +1,6 @@
-import {useEffect, useRef, useState} from 'react';
-import {Icon, Marker, layerGroup} from 'leaflet';
+import {useEffect, useRef} from 'react';
+import leaflet from 'leaflet';
+import {Icon} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {City} from '../../types/city.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
@@ -21,49 +22,27 @@ const currentCustomIcon = new Icon({
 export type MapProps = {
   city: City;
   offers: OfferPreview[];
+  selectedOfferId: string | null;
 };
 
-export default function Map({city, offers}: MapProps) {
+export default function Map({selectedOfferId, city, offers}: MapProps) {
   const mapRef = useRef<HTMLElement | null>(null);
   const map = useMap(mapRef, city);
-  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
   useEffect(() => {
-    setActiveOfferId(null);
-  }, [city]);
-
-  useEffect(() => {
-    if (!map) {
-      return undefined;
+    if (map) {
+      offers.forEach((offer) => {
+        leaflet.marker({
+          lat: offer.location.latitude,
+          lng: offer.location.longitude,
+        }, {
+          icon: (offer.id === selectedOfferId)
+            ? currentCustomIcon
+            : defaultCustomIcon
+        }).addTo(map);
+      });
     }
-
-    const markersLayer = layerGroup();
-
-    offers.forEach((offer) => {
-      const {latitude, longitude} = offer.location;
-      const marker = new Marker({lat: latitude, lng: longitude});
-
-      marker
-        .setIcon(activeOfferId === offer.id ? currentCustomIcon : defaultCustomIcon)
-        .addTo(markersLayer)
-        .on('click', () => {
-          setActiveOfferId((prev) => (prev === offer.id ? null : offer.id));
-        });
-    });
-
-    markersLayer.addTo(map);
-    map.setView(
-      {
-        lat: city.location.latitude,
-        lng: city.location.longitude
-      },
-      city.location.zoom
-    );
-
-    return () => {
-      map.removeLayer(markersLayer);
-    };
-  }, [city, offers, map, activeOfferId]);
+  }, [map, offers, selectedOfferId]);
 
   return <section className="cities__map map" ref={mapRef}/>;
 }
