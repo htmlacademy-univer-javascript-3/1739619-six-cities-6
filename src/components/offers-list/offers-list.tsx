@@ -3,22 +3,30 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 
 type OffersListProps = {
   offers?: OfferPreview[];
-  setSelectedOfferId: (id: OfferPreview['id'] | null) => void;
+  variant: 'cities' | 'favorites' | 'near-places';
+  setSelectedOfferId?: (id: OfferPreview['id'] | null) => void;
 };
 
-export default function OffersList({offers, setSelectedOfferId}: OffersListProps) {
+const LIST_CLASS_MAP = {
+  cities: 'cities__places-list places__list tabs__content',
+  favorites: 'favorites__places',
+  'near-places': 'near-places__list places__list',
+} as const;
+
+export default function OffersList({offers, variant, setSelectedOfferId}: OffersListProps) {
   if (!offers || offers.length === 0) {
-    return <p>Нет доступных предложений</p>;
+    return <p>No places to stay available</p>;
   }
 
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={LIST_CLASS_MAP[variant]}>
       {offers.map((offer) => (
         <PlaceCard
           key={offer.id}
           offer={offer}
-          onMouseEnter={() => setSelectedOfferId(offer.id)}
-          onMouseLeave={() => setSelectedOfferId(null)}
+          variant={variant}
+          onMouseEnter={setSelectedOfferId ? () => setSelectedOfferId(offer.id) : undefined}
+          onMouseLeave={setSelectedOfferId ? () => setSelectedOfferId(null) : undefined}
         />
       ))}
     </div>

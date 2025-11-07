@@ -1,8 +1,11 @@
 import {Link, useParams} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
+import {AppRoute, NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import {Offer} from '../../types/offer';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
-import PlaceCard from '../../components/place-card/place-card.tsx';
+import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
+import {reviews} from '../../mocks/reviews.ts';
+import Map from '../../components/map/map.tsx';
+import NearPlacesList from '../../components/near-places-list/near-places-list.tsx';
 
 type OfferScreenProps = {
   offers: Offer[];
@@ -21,7 +24,10 @@ export default function OfferScreen({offers}: OfferScreenProps) {
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
   const nearbyOffers = offers
     .filter((offer) => offer.id !== currentOffer.id && offer.city.name === currentOffer.city.name)
-    .slice(0, 3);
+    .slice(0, NEARBY_OFFERS_LIMIT);
+  const offerReviews = reviews.filter((review) => review.offerId === currentOffer.id);
+  const reviewsCount = offerReviews.length;
+  const mapOffers = [currentOffer, ...nearbyOffers];
   const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
   const bookmarkButtonClassName = `offer__bookmark-button button${currentOffer.isFavorite ? ' offer__bookmark-button--active' : ''}`;
   const bookmarkButtonText = currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks';
@@ -153,56 +159,30 @@ export default function OfferScreen({offers}: OfferScreenProps) {
               </div>
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">
-                  Reviews · <span className="reviews__amount">1</span>
+                  Reviews · <span className="reviews__amount">{reviewsCount}</span>
                 </h2>
-                <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          className="reviews__avatar user__avatar"
-                          src="../../../markup/img/avatar-max.jpg"
-                          width={54}
-                          height={54}
-                          alt="Reviews avatar"
-                        />
-                      </div>
-                      <span className="reviews__user-name">Max</span>
-                    </div>
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{ width: '80%' }} />
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-                      <p className="reviews__text">
-                        A quiet cozy and picturesque that hides behind a a river by
-                        the unique lightness of Amsterdam. The building is green and
-                        from 18th century.
-                      </p>
-                      <time className="reviews__time" dateTime="2019-04-24">
-                        April 2019
-                      </time>
-                    </div>
-                  </li>
-                </ul>
+                <ReviewsList reviews={offerReviews}/>
                 <CommentForm/>
               </section>
             </div>
           </div>
-          <section className="offer__map map" />
+          {nearbyOffers.length > 0 ? (
+            <Map
+              city={currentOffer.city}
+              offers={mapOffers}
+              selectedOfferId={currentOffer.id}
+              className="offer__map map"
+            />
+          ) : (
+            <section className="offer__map map" />
+          )}
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <div className="near-places__list places__list">
-              {nearbyOffers.map((offer) => (
-                <PlaceCard key={offer.id} offer={offer} variant="near-places" />
-              ))}
-            </div>
+            <NearPlacesList offers={nearbyOffers} />
           </section>
         </div>
       </main>
