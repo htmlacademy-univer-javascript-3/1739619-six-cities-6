@@ -31,7 +31,11 @@ export default function App({offers}: AppProps) {
         />
         <Route
           path={AppRoute.Favorites}
-          element={<FavoritesScreen offers={offers}/>}
+          element={
+            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+              <FavoritesScreen offers={offers}/>
+            </PrivateRoute>
+          }
         />
         <Route
           path={`${AppRoute.Offer}/:offerId`}

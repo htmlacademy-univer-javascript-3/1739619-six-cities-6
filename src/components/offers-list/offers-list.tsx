@@ -1,21 +1,15 @@
-import {useState} from 'react';
 import PlaceCard from '../place-card/place-card.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 
 type OffersListProps = {
-  offers: OfferPreview[];
+  offers?: OfferPreview[];
+  setSelectedOfferId: (id: OfferPreview['id'] | null) => void;
 };
 
-export default function OffersList({offers}: OffersListProps) {
-  const [activeOffer, setActiveOffer] = useState<OfferPreview | null>(null);
-
-  const handleCardMouseEnter = (offer: OfferPreview) => {
-    setActiveOffer(offer);
-  };
-
-  const handleCardMouseLeave = () => {
-    setActiveOffer(null);
-  };
+export default function OffersList({offers, setSelectedOfferId}: OffersListProps) {
+  if (!offers || offers.length === 0) {
+    return <p>Нет доступных предложений</p>;
+  }
 
   return (
     <div className="cities__places-list places__list tabs__content">
@@ -23,9 +17,8 @@ export default function OffersList({offers}: OffersListProps) {
         <PlaceCard
           key={offer.id}
           offer={offer}
-          isActive={activeOffer?.id === offer.id}
-          onMouseEnter={() => handleCardMouseEnter(offer)}
-          onMouseLeave={handleCardMouseLeave}
+          onMouseEnter={() => setSelectedOfferId(offer.id)}
+          onMouseLeave={() => setSelectedOfferId(null)}
         />
       ))}
     </div>

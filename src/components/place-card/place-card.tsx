@@ -5,7 +5,6 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 type PlaceCardProps = {
   offer: OfferPreview;
   variant?: 'cities' | 'favorites' | 'near-places';
-  isActive?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 };
@@ -37,7 +36,6 @@ const IMAGE_SIZE_MAP = {
 export default function PlaceCard({
   offer,
   variant = 'cities',
-  isActive = false,
   onMouseEnter,
   onMouseLeave,
 }: PlaceCardProps) {
@@ -49,7 +47,7 @@ export default function PlaceCard({
 
   return (
     <article
-      className={`${CARD_CLASS_MAP[variant]}${isActive ? ' place-card--active' : ''}`}
+      className={CARD_CLASS_MAP[variant]}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
