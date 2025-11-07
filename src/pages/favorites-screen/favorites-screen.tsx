@@ -78,7 +78,11 @@ export default function FavoritesScreen({offers}: FavoritesScreenProps) {
                     </div>
                     <div className="favorites__places">
                       {groupedOffers[city].map((offer) => (
-                        <PlaceCard key={offer.id} offer={offer} variant="favorites" />
+                        <PlaceCard
+                          key={offer.id}
+                          offer={offer}
+                          variant="favorites"
+                        />
                       ))}
                     </div>
                   </li>

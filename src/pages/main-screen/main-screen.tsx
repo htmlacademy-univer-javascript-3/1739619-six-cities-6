@@ -127,6 +127,7 @@ export default function MainScreen({offers}: MainScreenProps) {
               <OffersList
                 offers={offers}
                 setSelectedOfferId={setSelectedOfferId}
+                variant='cities'
               />
             </section>
             <div className="cities__right-section">
@@ -135,6 +136,7 @@ export default function MainScreen({offers}: MainScreenProps) {
                   city={currentCity}
                   offers={offers}
                   selectedOfferId={selectedOfferId}
+                  className='cities__map map'
                 />
               ) : (
                 <section className="cities__map map" />

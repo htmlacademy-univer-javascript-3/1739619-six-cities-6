@@ -4,7 +4,7 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 
 type PlaceCardProps = {
   offer: OfferPreview;
-  variant?: 'cities' | 'favorites' | 'near-places';
+  variant: 'cities' | 'favorites' | 'near-places';
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 };
@@ -35,7 +35,7 @@ const IMAGE_SIZE_MAP = {
 
 export default function PlaceCard({
   offer,
-  variant = 'cities',
+  variant,
   onMouseEnter,
   onMouseLeave,
 }: PlaceCardProps) {
