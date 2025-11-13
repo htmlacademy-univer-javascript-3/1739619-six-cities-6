@@ -1,17 +1,15 @@
 import {Link, useParams} from 'react-router-dom';
 import {AppRoute, NEARBY_OFFERS_LIMIT} from '../../const.ts';
-import {Offer} from '../../types/offer';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import {reviews} from '../../mocks/reviews.ts';
 import Map from '../../components/map/map.tsx';
 import NearPlacesList from '../../components/near-places-list/near-places-list.tsx';
+import {useAppSelector} from '../../hooks';
+import {selectOffers} from '../../store/selectors.ts';
 
-type OfferScreenProps = {
-  offers: Offer[];
-};
-
-export default function OfferScreen({offers}: OfferScreenProps) {
+export default function OfferScreen() {
+  const offers = useAppSelector(selectOffers);
   const offerId = useParams<{offerId: string}>();
   const currentOffer = offers.find((offer) => offer.id === String(offerId.offerId));
 

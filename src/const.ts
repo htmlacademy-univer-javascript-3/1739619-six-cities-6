@@ -1,3 +1,5 @@
+import {cityMap} from './mocks/city.ts';
+
 export enum AppRoute {
   Main = '/',
   Login = '/login',
@@ -27,3 +29,14 @@ export const URL_MARKER_DEFAULT = '../public/img/pin.svg';
 export const URL_MARKER_CURRENT = '../public/img/pin-active.svg';
 
 export const NEARBY_OFFERS_LIMIT = 3;
+
+export const CITY_NAMES = [
+  'Paris',
+  'Cologne',
+  'Brussels',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+] as const;
+
+export const DEFAULT_CITY = cityMap.Paris;
