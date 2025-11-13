@@ -40,3 +40,13 @@ export const CITY_NAMES = [
 ] as const;
 
 export const DEFAULT_CITY = cityMap.Paris;
+
+export enum SortingOption {
+  Popular = 'Popular',
+  PriceLowToHigh = 'Price: low to high',
+  PriceHighToLow = 'Price: high to low',
+  TopRatedFirst = 'Top rated first',
+}
+
+
+export const SORTING_OPTIONS = Object.values(SortingOption) as SortingOption[];
