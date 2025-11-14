@@ -1,6 +1,5 @@
 import {useEffect, useRef} from 'react';
-import leaflet from 'leaflet';
-import {Icon} from 'leaflet';
+import leaflet, {Icon, layerGroup, LayerGroup} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {City} from '../../types/city.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
@@ -28,21 +27,47 @@ export type MapProps = {
 
 export default function Map({selectedOfferId, city, offers, className}: MapProps) {
   const mapRef = useRef<HTMLElement | null>(null);
+  const markersLayerRef = useRef<LayerGroup | null>(null);
   const map = useMap(mapRef, city);
 
   useEffect(() => {
     if (map) {
-      offers.forEach((offer) => {
-        leaflet.marker({
-          lat: offer.location.latitude,
-          lng: offer.location.longitude,
-        }, {
-          icon: (offer.id === selectedOfferId)
-            ? currentCustomIcon
-            : defaultCustomIcon
-        }).addTo(map);
-      });
+      const {latitude, longitude, zoom} = city.location;
+      map.setView({lat: latitude, lng: longitude}, zoom);
     }
+  }, [map, city]);
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    if (!markersLayerRef.current) {
+      markersLayerRef.current = layerGroup().addTo(map);
+    }
+
+    const markersLayer = markersLayerRef.current;
+
+    if (!markersLayer) {
+      return;
+    }
+
+    markersLayer.clearLayers();
+
+    offers.forEach((offer) => {
+      leaflet.marker({
+        lat: offer.location.latitude,
+        lng: offer.location.longitude,
+      }, {
+        icon: (offer.id === selectedOfferId)
+          ? currentCustomIcon
+          : defaultCustomIcon
+      }).addTo(markersLayer);
+    });
+
+    return () => {
+      markersLayer.clearLayers();
+    };
   }, [map, offers, selectedOfferId]);
 
   return <section className={className} ref={mapRef}/>;

@@ -7,19 +7,14 @@ import NotFoundPage from '../pages/not-found-page/not-found-page.tsx';
 import PrivateRoute from '../components/protected-route/protected-route.tsx';
 
 import {AppRoute, AuthorizationStatus} from '../const.ts';
-import {Offer} from '../types/offer.ts';
 
-type AppProps = {
-  offers: Offer[];
-};
-
-export default function App({offers}: AppProps) {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path={AppRoute.Main}
-          element={<MainScreen offers={offers}/>}
+          element={<MainScreen/>}
         />
         <Route
           path={AppRoute.Login}
@@ -33,13 +28,13 @@ export default function App({offers}: AppProps) {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-              <FavoritesScreen offers={offers}/>
+              <FavoritesScreen/>
             </PrivateRoute>
           }
         />
         <Route
           path={`${AppRoute.Offer}/:offerId`}
-          element={<OffersScreen offers={offers}/>}
+          element={<OffersScreen/>}
         />
         <Route
           path="*"

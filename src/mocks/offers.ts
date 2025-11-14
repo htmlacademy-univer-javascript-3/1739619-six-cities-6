@@ -1,4 +1,5 @@
 import {Offer} from '../types/offer.ts';
+import {cityMap} from './city';
 
 export const offers: Offer[] = [
   {
@@ -16,17 +17,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/15.jpg',
       'https://14.design.htmlacademy.pro/static/hotel/17.jpg'
     ],
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.37454,
-        longitude: 4.897976,
-        zoom: 13
-      }
-    },
+    city: cityMap.Paris,
     location: {
-      latitude: 52.3909553943508,
-      longitude: 4.85309666406198,
+      latitude: 48.868610000000004,
+      longitude: 2.342499,
       zoom: 16
     },
     goods: [
@@ -61,17 +55,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/11.jpg',
       'https://14.design.htmlacademy.pro/static/hotel/7.jpg'
     ],
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.37454,
-        longitude: 4.897976,
-        zoom: 13
-      }
-    },
+    city: cityMap.Cologne,
     location: {
-      latitude: 52.3609553943508,
-      longitude: 4.85309666406198,
+      latitude: 50.950361,
+      longitude: 6.959974,
       zoom: 16
     },
     goods: [
@@ -109,17 +96,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/2.jpg',
       'https://14.design.htmlacademy.pro/static/hotel/16.jpg'
     ],
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.37454,
-        longitude: 4.897976,
-        zoom: 1
-      }
-    },
+    city: cityMap.Brussels,
     location: {
-      latitude: 52.3909553943508,
-      longitude: 4.929309666406198,
+      latitude: 50.854557,
+      longitude: 4.364697,
       zoom: 16
     },
     goods: [
@@ -154,14 +134,7 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/18.jpg',
       'https://14.design.htmlacademy.pro/static/hotel/3.jpg'
     ],
-    city: {
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.37454,
-        longitude: 4.897976,
-        zoom: 13
-      }
-    },
+    city: cityMap.Amsterdam,
     location: {
       latitude: 52.3909553943508,
       longitude: 4.939309666406198,
