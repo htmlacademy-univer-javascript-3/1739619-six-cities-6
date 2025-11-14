@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Link} from 'react-router-dom';
-import {AppRoute, CITY_NAMES} from '../../const.ts';
+import {AppRoute, CITY_NAMES, SortingOption} from '../../const.ts';
 import {cityMap} from '../../mocks/city';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
@@ -10,6 +10,7 @@ import {selectCity, selectOffersByCity} from '../../store/selectors.ts';
 import {CityName} from '../../types/city.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
 import {changeCity} from '../../store/action.ts';
+import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
 
 
 export default function MainScreen() {
@@ -20,10 +21,30 @@ export default function MainScreen() {
   const currentCity = useAppSelector(selectCity);
   const cityName = currentCity.name;
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
+  const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
+
+  let sortedOffers = offers;
+
+  switch (currentSort) {
+    case SortingOption.PriceLowToHigh:
+      sortedOffers = [...offers].sort((firstOffer, secondOffer) => firstOffer.price - secondOffer.price);
+      break;
+    case SortingOption.PriceHighToLow:
+      sortedOffers = [...offers].sort((firstOffer, secondOffer) => secondOffer.price - firstOffer.price);
+      break;
+    case SortingOption.TopRatedFirst:
+      sortedOffers = [...offers].sort((firstOffer, secondOffer) => secondOffer.rating - firstOffer.rating);
+      break;
+  }
 
   const handleCityChange = (city: CityName) => {
     setSelectedOfferId(null);
+    setCurrentSort(SortingOption.Popular);
     dispatch(changeCity(cityMap[city]));
+  };
+
+  const handleSortChange = (sort: SortingOption) => {
+    setCurrentSort(sort);
   };
 
   return (
@@ -72,7 +93,7 @@ export default function MainScreen() {
           <section className="locations container">
             <CitiesList
               cities={CITY_NAMES}
-              activeCity={currentCity.name }
+              activeCity={currentCity.name}
               onCityChange={handleCityChange}
             />
           </section>
@@ -82,34 +103,9 @@ export default function MainScreen() {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offersCount} places to stay in {cityName}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width={7} height={4}>
-                    <use xlinkHref="#icon-arrow-select"/>
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li
-                    className="places__option places__option--active"
-                    tabIndex={0}
-                  >
-                    Popular
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: low to high
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: high to low
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Top rated first
-                  </li>
-                </ul>
-              </form>
+              <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
               <OffersList
-                offers={offers}
+                offers={sortedOffers}
                 setSelectedOfferId={setSelectedOfferId}
                 variant='cities'
               />

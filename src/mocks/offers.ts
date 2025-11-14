@@ -158,5 +158,49 @@ export const offers: Offer[] = [
     rating: 4.4,
     bedrooms: 2,
     maxAdults: 9
+  },
+  {
+    id: '038d31f2-f169-4177-b2cd-d9e4ffa52f25',
+    title: 'Penthouse, 4-5 rooms + 5 balconies',
+    description: 'I rent out a very sunny and bright apartment only 7 minutes walking distance to the metro station. The apartment has a spacious living room with a kitchen, one bedroom and a bathroom with mit bath. A terrace can be used in summer.',
+    type: 'room',
+    price: 161,
+    previewImage: 'https://14.design.htmlacademy.pro/static/hotel/1.jpg',
+    images: [
+      'https://14.design.htmlacademy.pro/static/hotel/15.jpg',
+      'https://14.design.htmlacademy.pro/static/hotel/18.jpg',
+      'https://14.design.htmlacademy.pro/static/hotel/17.jpg',
+      'https://14.design.htmlacademy.pro/static/hotel/9.jpg',
+      'https://14.design.htmlacademy.pro/static/hotel/6.jpg',
+      'https://14.design.htmlacademy.pro/static/hotel/3.jpg'
+    ],
+    city: cityMap.Paris,
+    location: {
+      latitude: 48.858610000000006,
+      longitude: 2.330499,
+      zoom: 16
+    },
+    goods: [
+      'Dishwasher',
+      'Laptop friendly workspace',
+      'Towels',
+      'Kitchen',
+      'Cable TV',
+      'Wi-Fi',
+      'Air conditioning',
+      'Washing machine',
+      'Heating',
+      'Baby seat'
+    ],
+    host: {
+      isPro: true,
+      name: 'Angelina',
+      avatarUrl: 'https://14.design.htmlacademy.pro/static/host/avatar-angelina.jpg'
+    },
+    isPremium: true,
+    isFavorite: false,
+    rating: 3.8,
+    bedrooms: 1,
+    maxAdults: 3
   }
 ];
