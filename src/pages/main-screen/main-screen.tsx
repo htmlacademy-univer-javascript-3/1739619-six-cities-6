@@ -1,16 +1,15 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {AppRoute, CITY_NAMES, SortingOption} from '../../const.ts';
-import {cityMap} from '../../mocks/city';
+import {AppRoute, CITY_NAMES, CITIES, SortingOption, CityName} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
 import {useAppSelector, useAppDispatch} from '../../hooks';
 import {selectCity, selectOffersByCity} from '../../store/selectors.ts';
-import {CityName} from '../../types/city.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
 import {changeCity} from '../../store/action.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
+import {Offer} from '../../types/offer.ts';
 
 
 export default function MainScreen() {
@@ -23,24 +22,30 @@ export default function MainScreen() {
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
   const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
 
-  let sortedOffers = offers;
+  const [sortedOffers, setSortedOffers] = useState<Offer[]>([]);
 
-  switch (currentSort) {
-    case SortingOption.PriceLowToHigh:
-      sortedOffers = [...offers].sort((firstOffer, secondOffer) => firstOffer.price - secondOffer.price);
-      break;
-    case SortingOption.PriceHighToLow:
-      sortedOffers = [...offers].sort((firstOffer, secondOffer) => secondOffer.price - firstOffer.price);
-      break;
-    case SortingOption.TopRatedFirst:
-      sortedOffers = [...offers].sort((firstOffer, secondOffer) => secondOffer.rating - firstOffer.rating);
-      break;
-  }
+  useEffect(() => {
+    let sorted;
+    switch (currentSort) {
+      case SortingOption.PriceLowToHigh:
+        sorted = [...offers].sort((a, b) => a.price - b.price);
+        break;
+      case SortingOption.PriceHighToLow:
+        sorted = [...offers].sort((a, b) => b.price - a.price);
+        break;
+      case SortingOption.TopRatedFirst:
+        sorted = [...offers].sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        sorted = [...offers];
+    }
+    setSortedOffers(sorted);
+  }, [currentSort, offers]);
 
   const handleCityChange = (city: CityName) => {
     setSelectedOfferId(null);
     setCurrentSort(SortingOption.Popular);
-    dispatch(changeCity(cityMap[city]));
+    dispatch(changeCity(CITIES[city]));
   };
 
   const handleSortChange = (sort: SortingOption) => {
@@ -93,7 +98,7 @@ export default function MainScreen() {
           <section className="locations container">
             <CitiesList
               cities={CITY_NAMES}
-              activeCity={currentCity.name}
+              activeCity={cityName}
               onCityChange={handleCityChange}
             />
           </section>
@@ -111,16 +116,12 @@ export default function MainScreen() {
               />
             </section>
             <div className="cities__right-section">
-              {currentCity && offers.length > 0 ? (
-                <Map
-                  city={currentCity}
-                  offers={offers}
-                  selectedOfferId={selectedOfferId}
-                  className='cities__map map'
-                />
-              ) : (
-                <section className="cities__map map" />
-              )}
+              <Map
+                city={currentCity}
+                offers={offers}
+                selectedOfferId={selectedOfferId}
+                className='cities__map map'
+              />
             </div>
           </div>
         </div>

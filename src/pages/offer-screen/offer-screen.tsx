@@ -2,7 +2,7 @@ import {Link, useParams} from 'react-router-dom';
 import {AppRoute, NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
-import {reviews} from '../../mocks/reviews.ts';
+import {Review} from '../../types/review.ts';
 import Map from '../../components/map/map.tsx';
 import NearPlacesList from '../../components/near-places-list/near-places-list.tsx';
 import {useAppSelector} from '../../hooks';
@@ -23,7 +23,7 @@ export default function OfferScreen() {
   const nearbyOffers = offers
     .filter((offer) => offer.id !== currentOffer.id && offer.city.name === currentOffer.city.name)
     .slice(0, NEARBY_OFFERS_LIMIT);
-  const offerReviews = reviews.filter((review) => review.offerId === currentOffer.id);
+  const offerReviews: Review[] = [];
   const reviewsCount = offerReviews.length;
   const mapOffers = [currentOffer, ...nearbyOffers];
   const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
@@ -164,16 +164,12 @@ export default function OfferScreen() {
               </section>
             </div>
           </div>
-          {nearbyOffers.length > 0 ? (
-            <Map
-              city={currentOffer.city}
-              offers={mapOffers}
-              selectedOfferId={currentOffer.id}
-              className="offer__map map"
-            />
-          ) : (
-            <section className="offer__map map" />
-          )}
+          <Map
+            city={currentOffer.city}
+            offers={mapOffers}
+            selectedOfferId={currentOffer.id}
+            className="offer__map map"
+          />
         </section>
         <div className="container">
           <section className="near-places places">
