@@ -5,16 +5,17 @@ import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
 import {useAppSelector, useAppDispatch} from '../../hooks';
-import {selectCity, selectOffersByCity} from '../../store/selectors.ts';
+import {selectCity, selectOffersByCity, selectOffersLoading} from '../../store/selectors.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
 import {changeCity} from '../../store/action.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
-import {Offer} from '../../types/offer.ts';
+import Spinner from '../../components/spinner/spinner.tsx';
 
 
 export default function MainScreen() {
   const dispatch = useAppDispatch();
   const offers = useAppSelector(selectOffersByCity);
+  const isOffersLoading = useAppSelector(selectOffersLoading);
   const offersCount = offers.length;
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
   const currentCity = useAppSelector(selectCity);
@@ -22,7 +23,7 @@ export default function MainScreen() {
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
   const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
 
-  const [sortedOffers, setSortedOffers] = useState<Offer[]>([]);
+  const [sortedOffers, setSortedOffers] = useState<OfferPreview[]>([]);
 
   useEffect(() => {
     let sorted;
@@ -93,38 +94,44 @@ export default function MainScreen() {
         </div>
       </header>
       <main className="page__main page__main--index">
-        <h1 className="visually-hidden">Cities</h1>
-        <div className="tabs">
-          <section className="locations container">
-            <CitiesList
-              cities={CITY_NAMES}
-              activeCity={cityName}
-              onCityChange={handleCityChange}
-            />
-          </section>
-        </div>
-        <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in {cityName}</b>
-              <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
-              <OffersList
-                offers={sortedOffers}
-                setSelectedOfferId={setSelectedOfferId}
-                variant='cities'
-              />
-            </section>
-            <div className="cities__right-section">
-              <Map
-                city={currentCity}
-                offers={offers}
-                selectedOfferId={selectedOfferId}
-                className='cities__map map'
-              />
+        {isOffersLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <h1 className="visually-hidden">Cities</h1>
+            <div className="tabs">
+              <section className="locations container">
+                <CitiesList
+                  cities={CITY_NAMES}
+                  activeCity={cityName}
+                  onCityChange={handleCityChange}
+                />
+              </section>
             </div>
-          </div>
-        </div>
+            <div className="cities">
+              <div className="cities__places-container container">
+                <section className="cities__places places">
+                  <h2 className="visually-hidden">Places</h2>
+                  <b className="places__found">{offersCount} places to stay in {cityName}</b>
+                  <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
+                  <OffersList
+                    offers={sortedOffers}
+                    setSelectedOfferId={setSelectedOfferId}
+                    variant='cities'
+                  />
+                </section>
+                <div className="cities__right-section">
+                  <Map
+                    city={currentCity}
+                    offers={offers}
+                    selectedOfferId={selectedOfferId}
+                    className='cities__map map'
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );

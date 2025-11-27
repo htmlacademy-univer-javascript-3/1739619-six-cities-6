@@ -1,17 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {DEFAULT_CITY} from '../const.ts';
 import {City} from '../types/city.ts';
-import {Offer} from '../types/offer.ts';
-import {changeCity, loadOffers} from './action.ts';
+import {OfferPreview} from '../types/offers-preview.ts';
+import {changeCity} from './action.ts';
+import {fetchOffersAction} from './api-actions.ts';
 
 export type OffersState = {
   city: City;
-  offers: Offer[];
+  offers: OfferPreview[];
+  isOffersLoading: boolean;
 };
 
 export const initialState: OffersState = {
   city: DEFAULT_CITY,
-  offers: []
+  offers: [],
+  isOffersLoading: true,
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -19,7 +22,14 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(changeCity, (state, action) => {
       state.city = action.payload;
     })
-    .addCase(loadOffers, (state, action) => {
+    .addCase(fetchOffersAction.pending, (state) => {
+      state.isOffersLoading = true;
+    })
+    .addCase(fetchOffersAction.fulfilled, (state, action) => {
       state.offers = action.payload;
+      state.isOffersLoading = false;
+    })
+    .addCase(fetchOffersAction.rejected, (state) => {
+      state.isOffersLoading = false;
     });
 });

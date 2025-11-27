@@ -98,3 +98,7 @@ export enum SortingOption {
 
 
 export const SORTING_OPTIONS = Object.values(SortingOption) as SortingOption[];
+
+export enum APIRoute {
+  Offers = '/offers',
+}
