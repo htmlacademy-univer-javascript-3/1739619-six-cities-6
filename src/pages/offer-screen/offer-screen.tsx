@@ -1,5 +1,5 @@
-import {useParams} from 'react-router-dom';
-import {NEARBY_OFFERS_LIMIT} from '../../const.ts';
+import {Navigate, useParams} from 'react-router-dom';
+import {AppRoute, NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
@@ -38,9 +38,7 @@ export default function OfferScreen() {
     return <Spinner/>;
   }
   if (!currentOffer) {
-    return (
-      <h1>Такого предложения нет</h1>
-    );
+    return <Navigate to={AppRoute.NotFound} replace />;
   }
 
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
