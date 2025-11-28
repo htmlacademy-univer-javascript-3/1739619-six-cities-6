@@ -3,15 +3,13 @@ import ReactDOM from 'react-dom/client';
 import App from './app/app.tsx';
 import {Provider} from 'react-redux';
 import {store} from './store';
-import {loadOffers} from './store/action.ts';
-
-import {offers} from './mocks/offers.ts';
+import {fetchOffersAction} from './store/api-actions.ts';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-store.dispatch(loadOffers(offers));
+store.dispatch(fetchOffersAction());
 
 root.render(
   <React.StrictMode>

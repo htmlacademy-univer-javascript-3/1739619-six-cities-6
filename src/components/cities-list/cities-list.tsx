@@ -1,5 +1,5 @@
 import {MouseEvent} from 'react';
-import {CityName} from '../../types/city';
+import {CityName} from '../../const.ts';
 
 type CitiesListProps = {
   cities: readonly CityName[];
