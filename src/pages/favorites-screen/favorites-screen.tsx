@@ -1,13 +1,14 @@
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
-import {Offer} from '../../types/offer';
+import {OfferPreview} from '../../types/offers-preview.ts';
 import PlaceCard from '../../components/place-card/place-card.tsx';
 import {useAppSelector} from '../../hooks';
 import {selectOffers} from '../../store/selectors.ts';
+import Header from '../../components/header/header.tsx';
 
-type FavoritesByCity = Record<string, Offer[]>;
+type FavoritesByCity = Record<string, OfferPreview[]>;
 
-const groupOffersByCity = (favoriteOffers: Offer[]): FavoritesByCity => favoriteOffers.reduce<FavoritesByCity>((accumulator, offer) => ({
+const groupOffersByCity = (favoriteOffers: OfferPreview[]): FavoritesByCity => favoriteOffers.reduce<FavoritesByCity>((accumulator, offer) => ({
   ...accumulator,
   [offer.city.name]: [...(accumulator[offer.city.name] ?? []), offer],
 }), {});
@@ -21,44 +22,7 @@ export default function FavoritesScreen() {
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link" to={AppRoute.Main}>
-                <img
-                  className="header__logo"
-                  src="../../../markup/img/logo.svg"
-                  alt="6 cities logo"
-                  width={81}
-                  height={41}
-                />
-              </Link>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link
-                    className="header__nav-link header__nav-link--profile"
-                    to={AppRoute.Favorites}
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">{favoriteOffersCount}</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to={AppRoute.Login}>
-                    <span className="header__signout">Sign out</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header favoriteOffersCount={favoriteOffersCount} />
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           <section className="favorites">

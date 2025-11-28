@@ -6,7 +6,7 @@ import FavoritesScreen from '../pages/favorites-screen/favorites-screen.tsx';
 import NotFoundPage from '../pages/not-found-page/not-found-page.tsx';
 import PrivateRoute from '../components/protected-route/protected-route.tsx';
 
-import {AppRoute, AuthorizationStatus} from '../const.ts';
+import {AppRoute} from '../const.ts';
 
 export default function App() {
   return (
@@ -19,15 +19,13 @@ export default function App() {
         <Route
           path={AppRoute.Login}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-              <AuthScreen/>
-            </PrivateRoute>
+            <AuthScreen/>
           }
         />
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+            <PrivateRoute>
               <FavoritesScreen/>
             </PrivateRoute>
           }
