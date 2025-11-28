@@ -5,6 +5,7 @@ export enum AppRoute {
   Login = '/login',
   Favorites = '/favorites',
   Offer = '/offer',
+  NotFound = '/404',
 }
 
 export enum AuthorizationStatus {
@@ -103,6 +104,7 @@ export enum APIRoute {
   Offers = '/offers',
   Login = '/login',
   Logout = '/logout',
+  Comments = '/comments',
 }
 
 export const TIMEOUT_SHOW_ERROR = 2000;
