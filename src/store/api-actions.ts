@@ -7,6 +7,8 @@ import {requireAuthorization, setError} from './action.ts';
 import {UserData} from '../types/user-data.ts';
 import {AuthData} from '../types/auth-data.ts';
 import {dropToken, saveToken} from '../services/token.ts';
+import {Offer} from '../types/offer.ts';
+import {Review} from '../types/review.ts';
 
 export const fetchOffersAction = createAsyncThunk<OfferPreview[], undefined, {
   extra: AxiosInstance;
@@ -14,6 +16,39 @@ export const fetchOffersAction = createAsyncThunk<OfferPreview[], undefined, {
   'offers/fetchOffers',
   async (_arg, {extra: api}) => {
     const {data} = await api.get<OfferPreview[]>(APIRoute.Offers);
+
+    return data;
+  }
+);
+
+export const fetchOfferAction = createAsyncThunk<Offer, OfferPreview['id'], {
+  extra: AxiosInstance;
+}>(
+  'offer/fetchCurrentOffer',
+  async (offerId, {extra: api}) => {
+    const {data} = await api.get<Offer>(`${APIRoute.Offers}/${offerId}`);
+
+    return data;
+  }
+);
+
+export const fetchNearbyOffersAction = createAsyncThunk<OfferPreview[], OfferPreview['id'], {
+  extra: AxiosInstance;
+}>(
+  'offer/fetchNearbyOffers',
+  async (offerId, {extra: api}) => {
+    const {data} = await api.get<OfferPreview[]>(`${APIRoute.Offers}/${offerId}/nearby`);
+
+    return data;
+  }
+);
+
+export const fetchOfferReviewsAction = createAsyncThunk<Review[], OfferPreview['id'], {
+  extra: AxiosInstance;
+}>(
+  'offer/fetchReviews',
+  async (offerId, {extra: api}) => {
+    const {data} = await api.get<Review[]>(`${APIRoute.Comments}/${offerId}`);
 
     return data;
   }

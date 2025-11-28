@@ -2,18 +2,41 @@ import {useParams} from 'react-router-dom';
 import {NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
-import {Review} from '../../types/review.ts';
 import Map from '../../components/map/map.tsx';
 import NearPlacesList from '../../components/near-places-list/near-places-list.tsx';
-import {useAppSelector} from '../../hooks';
-import {selectOffers} from '../../store/selectors.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {
+  selectCurrentOffer,
+  selectCurrentOfferLoading,
+  selectNearbyOffers,
+  selectOfferReviews,
+  selectOffers
+} from '../../store/selectors.ts';
+import {fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
 import Header from '../../components/header/header.tsx';
+import Spinner from '../../components/spinner/spinner.tsx';
+import {useEffect} from 'react';
 
 export default function OfferScreen() {
+  const dispatch = useAppDispatch();
   const offers = useAppSelector(selectOffers);
-  const offerId = useParams<{offerId: string}>();
-  const currentOffer = offers.find((offer) => offer.id === String(offerId.offerId));
+  const {offerId} = useParams<{offerId: string}>();
+  const currentOffer = useAppSelector(selectCurrentOffer);
+  const isCurrentOfferLoading = useAppSelector(selectCurrentOfferLoading);
+  const nearbyOffers = useAppSelector(selectNearbyOffers).slice(0, NEARBY_OFFERS_LIMIT);
+  const offerReviews = useAppSelector(selectOfferReviews);
 
+  useEffect(() => {
+    if (offerId) {
+      dispatch(fetchOfferAction(offerId));
+      dispatch(fetchNearbyOffersAction(offerId));
+      dispatch(fetchOfferReviewsAction(offerId));
+    }
+  }, [dispatch, offerId]);
+
+  if (isCurrentOfferLoading) {
+    return <Spinner/>;
+  }
   if (!currentOffer) {
     return (
       <h1>Такого предложения нет</h1>
@@ -21,10 +44,6 @@ export default function OfferScreen() {
   }
 
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
-  const nearbyOffers = offers
-    .filter((offer) => offer.id !== currentOffer.id && offer.city.name === currentOffer.city.name)
-    .slice(0, NEARBY_OFFERS_LIMIT);
-  const offerReviews: Review[] = [];
   const reviewsCount = offerReviews.length;
   const mapOffers = [currentOffer, ...nearbyOffers];
   const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
