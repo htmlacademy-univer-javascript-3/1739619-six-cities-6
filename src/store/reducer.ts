@@ -10,7 +10,8 @@ import {
   fetchOfferReviewsAction,
   fetchOffersAction,
   loginAction,
-  logoutAction
+  logoutAction,
+  postOfferReviewAction
 } from './api-actions.ts';
 import {UserData} from '../types/user-data.ts';
 import {Offer} from '../types/offer.ts';
@@ -27,6 +28,7 @@ export type OffersState = {
   currentOffer: Offer | null;
   nearbyOffers: OfferPreview[];
   offerReviews: Review[];
+  isReviewPosting: boolean;
 };
 
 export const initialState: OffersState = {
@@ -40,6 +42,7 @@ export const initialState: OffersState = {
   currentOffer: null,
   nearbyOffers: [],
   offerReviews: [],
+  isReviewPosting: false,
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -79,6 +82,18 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(fetchOfferReviewsAction.rejected, (state) => {
       state.offerReviews = [];
+    })
+    .addCase(postOfferReviewAction.pending, (state) => {
+      state.isReviewPosting = true;
+    })
+    .addCase(postOfferReviewAction.fulfilled, (state, action) => {
+      state.offerReviews = action.payload.length === 1
+        ? [action.payload[0], ...state.offerReviews]
+        : action.payload;
+      state.isReviewPosting = false;
+    })
+    .addCase(postOfferReviewAction.rejected, (state) => {
+      state.isReviewPosting = false;
     })
     .addCase(requireAuthorization, (state, action) => {
       state.authorizationStatus = action.payload;

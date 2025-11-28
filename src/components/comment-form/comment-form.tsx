@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import {MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, RATING_VALUES, RATING_TITLES} from '../../const.ts';
+import {Offer} from '../../types/offer.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {selectIsReviewPosting} from '../../store/selectors.ts';
+import {postOfferReviewAction} from '../../store/api-actions.ts';
 
-export default function CommentForm() {
+type CommentFormProps = {
+  offerId: Offer['id'];
+};
+
+export default function CommentForm({offerId}: CommentFormProps) {
+  const dispatch = useAppDispatch();
+  const isReviewPosting = useAppSelector(selectIsReviewPosting);
   const [formState, setFormState] = useState({ rating: 0, review: '' });
 
   const handleChange = (
@@ -21,8 +31,24 @@ export default function CommentForm() {
     reviewLength < MIN_REVIEW_LENGTH ||
     reviewLength > MAX_REVIEW_LENGTH;
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isSubmitDisabled || isReviewPosting) {
+      return;
+    }
+
+    void dispatch(postOfferReviewAction({
+      offerId,
+      comment: formState.review.trim(),
+      rating: formState.rating
+    }))
+      .unwrap()
+      .then(() => setFormState({rating: 0, review: ''}));
+  };
+
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -38,6 +64,7 @@ export default function CommentForm() {
               type="radio"
               checked={formState.rating === value}
               onChange={handleChange}
+              disabled={isReviewPosting}
             />
             <label
               htmlFor={`${value}-stars`}
@@ -60,6 +87,7 @@ export default function CommentForm() {
         value={formState.review}
         onChange={handleChange}
         maxLength={MAX_REVIEW_LENGTH}
+        disabled={isReviewPosting}
       />
 
       <div className="reviews__button-wrapper">
@@ -72,7 +100,7 @@ export default function CommentForm() {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={isSubmitDisabled}
+          disabled={isSubmitDisabled || isReviewPosting}
         >
           Submit
         </button>

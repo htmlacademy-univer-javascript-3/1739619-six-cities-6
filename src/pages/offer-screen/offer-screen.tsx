@@ -1,5 +1,5 @@
 import {Navigate, useParams} from 'react-router-dom';
-import {AppRoute, NEARBY_OFFERS_LIMIT} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
@@ -10,7 +10,8 @@ import {
   selectCurrentOfferLoading,
   selectNearbyOffers,
   selectOfferReviews,
-  selectOffers
+  selectOffers,
+  selectAuthorizationStatus
 } from '../../store/selectors.ts';
 import {fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
 import Header from '../../components/header/header.tsx';
@@ -23,6 +24,7 @@ export default function OfferScreen() {
   const {offerId} = useParams<{offerId: string}>();
   const currentOffer = useAppSelector(selectCurrentOffer);
   const isCurrentOfferLoading = useAppSelector(selectCurrentOfferLoading);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const nearbyOffers = useAppSelector(selectNearbyOffers).slice(0, NEARBY_OFFERS_LIMIT);
   const offerReviews = useAppSelector(selectOfferReviews);
 
@@ -141,7 +143,9 @@ export default function OfferScreen() {
                   Reviews · <span className="reviews__amount">{reviewsCount}</span>
                 </h2>
                 <ReviewsList reviews={offerReviews}/>
-                <CommentForm/>
+                {authorizationStatus === AuthorizationStatus.Auth && (
+                  <CommentForm offerId={currentOffer.id}/>
+                )}
               </section>
             </div>
           </div>

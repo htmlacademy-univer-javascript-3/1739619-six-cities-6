@@ -13,6 +13,8 @@ export const selectNearbyOffers = (state: State) => state.nearbyOffers;
 export const selectOfferReviews = (state: State) => state.offerReviews;
 export const selectAuthorizationStatus = (state: State) => state.authorizationStatus;
 
+export const selectIsReviewPosting = (state: State) => state.isReviewPosting;
+
 export const selectUserData = (state: State) => state.userData;
 
 export const selectError = (state: State) => state.error;
