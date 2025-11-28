@@ -1,7 +1,49 @@
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
+import {FormEvent, useEffect, useMemo, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {loginAction} from '../../store/api-actions.ts';
+import {selectAuthorizationStatus, selectError} from '../../store/selectors.ts';
 
 export default function AuthScreen() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [validationError, setValidationError] = useState('');
+  const authError = useAppSelector(selectError);
+
+  useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      navigate(AppRoute.Main);
+    }
+  }, [authorizationStatus, navigate]);
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    const passwordHasLetterAndNumber = /(?=.*[a-zA-Z])(?=.*\d)/.test(password);
+
+    if (!email || !password.trim()) {
+      setValidationError('Введите email и пароль.');
+      return;
+    }
+
+    if (!passwordHasLetterAndNumber) {
+      setValidationError('Пароль должен содержать хотя бы одну букву и цифру.');
+      return;
+    }
+
+    setValidationError('');
+    dispatch(loginAction({login: email, password}));
+  };
+
+  const errorMessage = useMemo(
+    () => validationError || authError || '',
+    [authError, validationError]
+  );
+
   return (
     <div className="page page--gray page--login">
       <header className="header">
@@ -25,7 +67,7 @@ export default function AuthScreen() {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post">
+            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
                 <input
@@ -33,6 +75,11 @@ export default function AuthScreen() {
                   type="email"
                   name="email"
                   placeholder="Email"
+                  value={email}
+                  onChange={(evt) => {
+                    setEmail(evt.target.value);
+                    setValidationError('');
+                  }}
                   required
                 />
               </div>
@@ -43,9 +90,19 @@ export default function AuthScreen() {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(evt) => {
+                    setPassword(evt.target.value);
+                    setValidationError('');
+                  }}
                   required
                 />
               </div>
+              {errorMessage && (
+                <p className="login__error-message" role="alert" style={{ color: 'red' }}>
+                  {errorMessage}
+                </p>
+              )}
               <button className="login__submit form__submit button" type="submit">
                 Sign in
               </button>
