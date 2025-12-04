@@ -3,7 +3,7 @@ import {AppRoute} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import PlaceCard from '../../components/place-card/place-card.tsx';
 import {useAppSelector} from '../../hooks';
-import {selectOffers} from '../../store/selectors.ts';
+import {getOffers} from '../../store/offers-data/selectors.ts';
 import Header from '../../components/header/header.tsx';
 
 type FavoritesByCity = Record<string, OfferPreview[]>;
@@ -14,7 +14,7 @@ const groupOffersByCity = (favoriteOffers: OfferPreview[]): FavoritesByCity => f
 }), {});
 
 export default function FavoritesScreen() {
-  const offers = useAppSelector(selectOffers);
+  const offers = useAppSelector(getOffers);
   const favoriteOffers = offers.filter((offer) => offer.isFavorite);
   const groupedOffers = groupOffersByCity(favoriteOffers);
   const cities = Object.keys(groupedOffers);

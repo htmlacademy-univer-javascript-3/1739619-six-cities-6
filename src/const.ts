@@ -110,4 +110,12 @@ export enum APIRoute {
   Comments = '/comments',
 }
 
+export enum NameSpace {
+  City = 'city',
+  Offers = 'offers',
+  OfferDetails = 'offerDetails',
+  Reviews = 'reviews',
+  Auth = 'auth',
+}
+
 export const TIMEOUT_SHOW_ERROR = 2000;

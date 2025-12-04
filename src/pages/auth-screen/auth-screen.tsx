@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
-import {selectAuthorizationStatus, selectError} from '../../store/selectors.ts';
+import {getAuthorizationStatus, getError} from '../../store/user-process/selectors.ts';
 import {AuthFormState} from '../../types/auth-form-state.ts';
 import HeaderLogo from '../../components/header-logo/header-logo.tsx';
 import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
@@ -11,7 +11,7 @@ import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
 export default function AuthScreen() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [formState, setFormState] = useState<AuthFormState>({
     data: {
       email: '',
@@ -19,7 +19,7 @@ export default function AuthScreen() {
     },
     validation: null,
   });
-  const authError = useAppSelector(selectError);
+  const authError = useAppSelector(getError);
 
   useEffect(() => {
     if (authorizationStatus === AuthorizationStatus.Auth) {

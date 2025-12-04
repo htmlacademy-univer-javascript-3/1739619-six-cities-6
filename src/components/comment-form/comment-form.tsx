@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, RATING_VALUES, RATING_TITLES} from '../../const.ts';
 import {Offer} from '../../types/offer.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {selectIsReviewPosting} from '../../store/selectors.ts';
+import {getReviewPostingStatus} from '../../store/reviews-data/selectors.ts';
 import {postOfferReviewAction} from '../../store/api-actions.ts';
 
 type CommentFormProps = {
@@ -11,7 +11,7 @@ type CommentFormProps = {
 
 export default function CommentForm({offerId}: CommentFormProps) {
   const dispatch = useAppDispatch();
-  const isReviewPosting = useAppSelector(selectIsReviewPosting);
+  const isReviewPosting = useAppSelector(getReviewPostingStatus);
   const [formState, setFormState] = useState({ rating: 0, review: '' });
 
   const handleChange = (

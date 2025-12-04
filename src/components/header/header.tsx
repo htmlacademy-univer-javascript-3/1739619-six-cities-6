@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {logoutAction} from '../../store/api-actions.ts';
-import {selectAuthorizationStatus, selectUserData} from '../../store/selectors.ts';
+import {getAuthorizationStatus, getUserData} from '../../store/user-process/selectors.ts';
 import HeaderLogo from '../header-logo/header-logo.tsx';
 
 type HeaderProps = {
@@ -12,8 +12,8 @@ type HeaderProps = {
 
 function HeaderInner({favoriteOffersCount = 0}: HeaderProps) {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
-  const userData = useAppSelector(selectUserData);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const userData = useAppSelector(getUserData);
   const isAuthorized = authorizationStatus === AuthorizationStatus.Auth;
 
   const handleSignOut = () => {
