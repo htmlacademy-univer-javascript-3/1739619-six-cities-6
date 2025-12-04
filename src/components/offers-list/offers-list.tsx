@@ -6,6 +6,7 @@ type OffersListProps = {
   offers?: OfferPreview[];
   variant: 'cities' | 'favorites' | 'near-places';
   setSelectedOfferId?: (id: OfferPreview['id'] | null) => void;
+  onFavoriteToggle?: (offerId: OfferPreview['id'], isFavorite: boolean) => void;
 };
 
 const LIST_CLASS_MAP = {
@@ -14,7 +15,7 @@ const LIST_CLASS_MAP = {
   'near-places': 'near-places__list places__list',
 } as const;
 
-function OffersListInner({offers, variant, setSelectedOfferId}: OffersListProps) {
+function OffersListInner({offers, variant, setSelectedOfferId, onFavoriteToggle}: OffersListProps) {
   if (!offers || offers.length === 0) {
     return <p>No places to stay available</p>;
   }
@@ -28,6 +29,7 @@ function OffersListInner({offers, variant, setSelectedOfferId}: OffersListProps)
           variant={variant}
           onMouseEnter={setSelectedOfferId ? () => setSelectedOfferId(offer.id) : undefined}
           onMouseLeave={setSelectedOfferId ? () => setSelectedOfferId(null) : undefined}
+          onFavoriteToggle={onFavoriteToggle}
         />
       ))}
     </div>

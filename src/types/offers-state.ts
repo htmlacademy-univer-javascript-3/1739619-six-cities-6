@@ -10,6 +10,11 @@ export type OffersCollectionState = {
   isLoading: boolean;
 };
 
+export type FavoritesState = {
+  items: OfferPreview[];
+  isLoading: boolean;
+};
+
 export type OfferDetailsState = {
   data: Offer | null;
   isLoading: boolean;
@@ -33,4 +38,5 @@ export type OffersState = {
   offerDetails: OfferDetailsState;
   reviews: ReviewsState;
   auth: AuthState;
+  favorites: FavoritesState;
 };

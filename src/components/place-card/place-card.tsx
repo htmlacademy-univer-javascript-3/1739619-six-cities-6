@@ -8,6 +8,7 @@ type PlaceCardProps = {
   variant: 'cities' | 'favorites' | 'near-places';
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onFavoriteToggle?: (offerId: OfferPreview['id'], isFavorite: boolean) => void;
 };
 
 const CARD_CLASS_MAP = {
@@ -39,6 +40,7 @@ function PlaceCardInner({
   variant,
   onMouseEnter,
   onMouseLeave,
+  onFavoriteToggle,
 }: PlaceCardProps) {
   const {id, previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
 
@@ -77,6 +79,7 @@ function PlaceCardInner({
           <button
             className={bookmarkButtonClassName}
             type="button"
+            onClick={() => onFavoriteToggle?.(id, isFavorite)}
           >
             <svg
               className="place-card__bookmark-icon"

@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState, memo} from 'react';
-import {CITY_NAMES, CITIES, SortingOption, CityName} from '../../const.ts';
+import {useNavigate} from 'react-router-dom';
+import {CITY_NAMES, CITIES, SortingOption, CityName, AppRoute, AuthorizationStatus} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
@@ -11,16 +12,21 @@ import {changeCity} from '../../store/city-process/city-process.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
 import Header from '../../components/header/header.tsx';
-
+import NoOffers from '../../components/no-offers/no-offers.tsx';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getFavoriteOffersCount} from '../../store/favorites-data/selectors.ts';
+import {changeFavoriteStatusAction} from '../../store/api-actions.ts';
 
 function MainScreenInner() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const offers = useAppSelector(getOffersByCity);
   const isOffersLoading = useAppSelector(getOffersLoadingStatus);
   const offersCount = offers.length;
-  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
+  const favoriteOffersCount = useAppSelector(getFavoriteOffersCount);
   const currentCity = useAppSelector(getCity);
   const cityName = currentCity.name;
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
   const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
 
@@ -54,10 +60,22 @@ function MainScreenInner() {
     setCurrentSort(sort);
   },[]);
 
+  const handleFavoriteToggle = useCallback((offerId: OfferPreview['id'], isFavorite: boolean) => {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    const status = isFavorite ? 0 : 1;
+    dispatch(changeFavoriteStatusAction({offerId, status}));
+  }, [authorizationStatus, dispatch, navigate]);
+
+  const mainScreenClassName = `page__main page__main--index${offersCount === 0 ? ' page__main--index-empty' : ''}`;
+
   return (
     <div className="page page--gray page--main">
       <Header favoriteOffersCount={favoriteOffersCount}/>
-      <main className="page__main page__main--index">
+      <main className={mainScreenClassName}>
         {isOffersLoading ? (
           <Spinner />
         ) : (
@@ -73,26 +91,31 @@ function MainScreenInner() {
               </section>
             </div>
             <div className="cities">
-              <div className="cities__places-container container">
-                <section className="cities__places places">
-                  <h2 className="visually-hidden">Places</h2>
-                  <b className="places__found">{offersCount} places to stay in {cityName}</b>
-                  <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
-                  <OffersList
-                    offers={sortedOffers}
-                    setSelectedOfferId={setSelectedOfferId}
-                    variant='cities'
-                  />
-                </section>
-                <div className="cities__right-section">
-                  <Map
-                    city={currentCity}
-                    offers={offers}
-                    selectedOfferId={selectedOfferId}
-                    className='cities__map map'
-                  />
+              {offersCount === 0 ? (
+                <NoOffers cityName={cityName} />
+              ) : (
+                <div className="cities__places-container container">
+                  <section className="cities__places places">
+                    <h2 className="visually-hidden">Places</h2>
+                    <b className="places__found">{offersCount} places to stay in {cityName}</b>
+                    <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
+                    <OffersList
+                      offers={sortedOffers}
+                      setSelectedOfferId={setSelectedOfferId}
+                      variant='cities'
+                      onFavoriteToggle={handleFavoriteToggle}
+                    />
+                  </section>
+                  <div className="cities__right-section">
+                    <Map
+                      city={currentCity}
+                      offers={offers}
+                      selectedOfferId={selectedOfferId}
+                      className='cities__map map'
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </>
         )}

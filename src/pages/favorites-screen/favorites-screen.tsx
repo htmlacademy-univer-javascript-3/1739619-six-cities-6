@@ -1,10 +1,18 @@
+import {useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
+import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import PlaceCard from '../../components/place-card/place-card.tsx';
-import {useAppSelector} from '../../hooks';
-import {getOffers} from '../../store/offers-data/selectors.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import Header from '../../components/header/header.tsx';
+import Spinner from '../../components/spinner/spinner.tsx';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {
+  getFavoriteOffers,
+  getFavoriteOffersCount,
+  getFavoritesLoadingStatus
+} from '../../store/favorites-data/selectors.ts';
+import {changeFavoriteStatusAction, fetchFavoritesAction} from '../../store/api-actions.ts';
 
 type FavoritesByCity = Record<string, OfferPreview[]>;
 
@@ -14,11 +22,36 @@ const groupOffersByCity = (favoriteOffers: OfferPreview[]): FavoritesByCity => f
 }), {});
 
 export default function FavoritesScreen() {
-  const offers = useAppSelector(getOffers);
-  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
+  const dispatch = useAppDispatch();
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
+  const isFavoritesLoading = useAppSelector(getFavoritesLoadingStatus);
+  const favoriteOffersCount = useAppSelector(getFavoriteOffersCount);
+
+  useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      dispatch(fetchFavoritesAction());
+    }
+  }, [authorizationStatus, dispatch]);
+
+  const handleFavoriteToggle = (offerId: OfferPreview['id'], isFavorite: boolean) => {
+    const status = isFavorite ? 0 : 1;
+    dispatch(changeFavoriteStatusAction({offerId, status}));
+  };
+
   const groupedOffers = groupOffersByCity(favoriteOffers);
   const cities = Object.keys(groupedOffers);
-  const favoriteOffersCount = favoriteOffers.length;
+
+  if (isFavoritesLoading) {
+    return (
+      <div className="page">
+        <Header favoriteOffersCount={favoriteOffersCount} />
+        <main className="page__main page__main--favorites">
+          <Spinner />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="page">
@@ -46,6 +79,7 @@ export default function FavoritesScreen() {
                           key={offer.id}
                           offer={offer}
                           variant="favorites"
+                          onFavoriteToggle={handleFavoriteToggle}
                         />
                       ))}
                     </div>
