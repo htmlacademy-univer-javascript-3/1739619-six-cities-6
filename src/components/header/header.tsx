@@ -1,14 +1,16 @@
+import {memo} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {logoutAction} from '../../store/api-actions.ts';
 import {selectAuthorizationStatus, selectUserData} from '../../store/selectors.ts';
+import HeaderLogo from '../header-logo/header-logo.tsx';
 
 type HeaderProps = {
   favoriteOffersCount?: number;
 };
 
-export default function Header({favoriteOffersCount = 0}: HeaderProps) {
+function HeaderInner({favoriteOffersCount = 0}: HeaderProps) {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const userData = useAppSelector(selectUserData);
@@ -22,17 +24,7 @@ export default function Header({favoriteOffersCount = 0}: HeaderProps) {
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
-          <div className="header__left">
-            <Link className="header__logo-link header__logo-link--active" to={AppRoute.Main}>
-              <img
-                className="header__logo"
-                src="../../../markup/img/logo.svg"
-                alt="6 cities logo"
-                width={81}
-                height={41}
-              />
-            </Link>
-          </div>
+          <HeaderLogo/>
           <nav className="header__nav">
             <ul className="header__nav-list">
               {isAuthorized && userData ? (
@@ -70,3 +62,6 @@ export default function Header({favoriteOffersCount = 0}: HeaderProps) {
     </header>
   );
 }
+
+const Header = memo(HeaderInner);
+export default Header;

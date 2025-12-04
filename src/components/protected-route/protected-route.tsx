@@ -3,7 +3,7 @@ import {Navigate} from 'react-router-dom';
 import {useAppSelector} from '../../hooks';
 
 type PrivateRouteProps = {
-  children: Element;
+  children: JSX.Element;
 }
 
 export default function PrivateRoute(props: PrivateRouteProps) {

@@ -1,3 +1,4 @@
+import {memo} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
@@ -33,7 +34,7 @@ const IMAGE_SIZE_MAP = {
   'near-places': {width: 260, height: 200},
 } as const;
 
-export default function PlaceCard({
+function PlaceCardInner({
   offer,
   variant,
   onMouseEnter,
@@ -104,4 +105,5 @@ export default function PlaceCard({
   );
 }
 
-
+const PlaceCard = memo(PlaceCardInner);
+export default PlaceCard;

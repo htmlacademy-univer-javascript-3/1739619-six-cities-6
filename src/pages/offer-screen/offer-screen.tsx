@@ -16,7 +16,7 @@ import {
 import {fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 
 export default function OfferScreen() {
   const dispatch = useAppDispatch();
@@ -25,8 +25,13 @@ export default function OfferScreen() {
   const currentOffer = useAppSelector(selectCurrentOffer);
   const isCurrentOfferLoading = useAppSelector(selectCurrentOfferLoading);
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
-  const nearbyOffers = useAppSelector(selectNearbyOffers).slice(0, NEARBY_OFFERS_LIMIT);
+  const nearbyOffersAll = useAppSelector(selectNearbyOffers);
   const offerReviews = useAppSelector(selectOfferReviews);
+
+  const nearbyOffers = useMemo(
+    () => nearbyOffersAll.slice(0, NEARBY_OFFERS_LIMIT),
+    [nearbyOffersAll]
+  );
 
   useEffect(() => {
     if (offerId) {

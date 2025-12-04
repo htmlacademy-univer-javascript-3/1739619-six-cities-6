@@ -1,10 +1,12 @@
 import {FormEvent, useEffect, useMemo, useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
 import {selectAuthorizationStatus, selectError} from '../../store/selectors.ts';
 import {AuthFormState} from '../../types/auth-form-state.ts';
+import HeaderLogo from '../../components/header-logo/header-logo.tsx';
+import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
 
 export default function AuthScreen() {
   const dispatch = useAppDispatch();
@@ -57,17 +59,7 @@ export default function AuthScreen() {
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
-            <div className="header__left">
-              <Link to={AppRoute.Main} className="header__logo-link">
-                <img
-                  className="header__logo"
-                  src="../../../markup/img/logo.svg"
-                  alt="6 cities logo"
-                  width={81}
-                  height={41}
-                />
-              </Link>
-            </div>
+            <HeaderLogo/>
           </div>
         </div>
       </header>
@@ -124,9 +116,7 @@ export default function AuthScreen() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link to={AppRoute.Main} className="locations__item-link">
-                <span>Amsterdam</span>
-              </Link>
+              <AmsterdamLink/>
             </div>
           </section>
         </div>
