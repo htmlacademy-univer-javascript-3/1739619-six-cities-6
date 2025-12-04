@@ -35,7 +35,7 @@ export default function Header({favoriteOffersCount = 0}: HeaderProps) {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {isAuthorized ? (
+              {isAuthorized && userData ? (
                 <>
                   <li className="header__nav-item user">
                     <Link

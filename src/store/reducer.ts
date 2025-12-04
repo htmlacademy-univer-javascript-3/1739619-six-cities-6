@@ -1,7 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {AuthorizationStatus, DEFAULT_CITY} from '../const.ts';
-import {City} from '../types/city.ts';
-import {OfferPreview} from '../types/offers-preview.ts';
 import {changeCity, requireAuthorization, setError} from './action.ts';
 import {
   checkAuthAction,
@@ -13,36 +11,28 @@ import {
   logoutAction,
   postOfferReviewAction
 } from './api-actions.ts';
-import {UserData} from '../types/user-data.ts';
-import {Offer} from '../types/offer.ts';
-import {Review} from '../types/review.ts';
-
-export type OffersState = {
-  city: City;
-  offers: OfferPreview[];
-  isOffersLoading: boolean;
-  isCurrentOfferLoading: boolean;
-  authorizationStatus: AuthorizationStatus;
-  error: string | null;
-  userData: UserData | null;
-  currentOffer: Offer | null;
-  nearbyOffers: OfferPreview[];
-  offerReviews: Review[];
-  isReviewPosting: boolean;
-};
+import {OffersState} from '../types/offers-state.ts';
 
 export const initialState: OffersState = {
   city: DEFAULT_CITY,
-  offers: [],
-  isOffersLoading: true,
-  isCurrentOfferLoading: true,
-  authorizationStatus: AuthorizationStatus.Unknown,
-  error: null,
-  userData: null,
-  currentOffer: null,
-  nearbyOffers: [],
-  offerReviews: [],
-  isReviewPosting: false,
+  offers: {
+    items: [],
+    isLoading: true,
+  },
+  offerDetails: {
+    data: null,
+    isLoading: true,
+    nearby: [],
+  },
+  reviews: {
+    items: [],
+    isPosting: false,
+  },
+  auth: {
+    status: AuthorizationStatus.Unknown,
+    user: null,
+    error: null,
+  },
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -51,79 +41,79 @@ export const reducer = createReducer(initialState, (builder) => {
       state.city = action.payload;
     })
     .addCase(fetchOffersAction.pending, (state) => {
-      state.isOffersLoading = true;
+      state.offers.isLoading = true;
     })
     .addCase(fetchOffersAction.fulfilled, (state, action) => {
-      state.offers = action.payload;
-      state.isOffersLoading = false;
+      state.offers.items = action.payload;
+      state.offers.isLoading = false;
     })
     .addCase(fetchOffersAction.rejected, (state) => {
-      state.isOffersLoading = false;
+      state.offers.isLoading = false;
     })
     .addCase(fetchOfferAction.pending, (state) => {
-      state.isCurrentOfferLoading = true;
+      state.offerDetails.isLoading = true;
     })
     .addCase(fetchOfferAction.fulfilled, (state, action) => {
-      state.currentOffer = action.payload;
-      state.isCurrentOfferLoading = false;
+      state.offerDetails.data = action.payload;
+      state.offerDetails.isLoading = false;
     })
     .addCase(fetchOfferAction.rejected, (state) => {
-      state.isCurrentOfferLoading = false;
-      state.currentOffer = null;
+      state.offerDetails.isLoading = false;
+      state.offerDetails.data = null;
     })
     .addCase(fetchNearbyOffersAction.fulfilled, (state, action) => {
-      state.nearbyOffers = action.payload;
+      state.offerDetails.nearby = action.payload;
     })
     .addCase(fetchNearbyOffersAction.rejected, (state) => {
-      state.nearbyOffers = [];
+      state.offerDetails.nearby = [];
     })
     .addCase(fetchOfferReviewsAction.fulfilled, (state, action) => {
-      state.offerReviews = action.payload;
+      state.reviews.items = action.payload;
     })
     .addCase(fetchOfferReviewsAction.rejected, (state) => {
-      state.offerReviews = [];
+      state.reviews.items = [];
     })
     .addCase(postOfferReviewAction.pending, (state) => {
-      state.isReviewPosting = true;
+      state.reviews.isPosting = true;
     })
     .addCase(postOfferReviewAction.fulfilled, (state, action) => {
-      state.offerReviews = action.payload.length === 1
-        ? [action.payload[0], ...state.offerReviews]
+      state.reviews.items = action.payload.length === 1
+        ? [action.payload[0], ...state.reviews.items]
         : action.payload;
-      state.isReviewPosting = false;
+      state.reviews.isPosting = false;
     })
     .addCase(postOfferReviewAction.rejected, (state) => {
-      state.isReviewPosting = false;
+      state.reviews.isPosting = false;
     })
     .addCase(requireAuthorization, (state, action) => {
-      state.authorizationStatus = action.payload;
+      state.auth.status = action.payload;
     })
     .addCase(loginAction.fulfilled, (state, action) => {
-      state.authorizationStatus = AuthorizationStatus.Auth;
-      state.userData = action.payload;
+      state.auth.status = AuthorizationStatus.Auth;
+      state.auth.user = action.payload;
     })
     .addCase(loginAction.pending, (state) => {
-      state.authorizationStatus = AuthorizationStatus.Unknown;
+      state.auth.status = AuthorizationStatus.Unknown;
     })
     .addCase(loginAction.rejected, (state) => {
-      state.authorizationStatus = AuthorizationStatus.NoAuth;
-      state.userData = null;
+      state.auth.status = AuthorizationStatus.NoAuth;
+      state.auth.user = null;
     })
     .addCase(checkAuthAction.fulfilled, (state, action) => {
-      state.authorizationStatus = AuthorizationStatus.Auth;
-      state.userData = action.payload;
+      state.auth.status = AuthorizationStatus.Auth;
+      state.auth.user = action.payload;
     })
     .addCase(checkAuthAction.pending, (state) => {
-      state.authorizationStatus = AuthorizationStatus.Unknown;
+      state.auth.status = AuthorizationStatus.Unknown;
     })
     .addCase(checkAuthAction.rejected, (state) => {
-      state.userData = null;
+      state.auth.user = null;
     })
     .addCase(logoutAction.fulfilled, (state) => {
-      state.authorizationStatus = AuthorizationStatus.NoAuth;
-      state.userData = null;
+      state.auth.status = AuthorizationStatus.NoAuth;
+      state.auth.user = null;
     })
     .addCase(setError, (state, action) => {
-      state.error = action.payload;
+      state.auth.error = action.payload;
     });
 });
