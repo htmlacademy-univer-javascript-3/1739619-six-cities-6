@@ -1,4 +1,4 @@
-import {MouseEvent} from 'react';
+import {MouseEvent, memo} from 'react';
 import {CityName} from '../../const.ts';
 
 type CitiesListProps = {
@@ -7,7 +7,7 @@ type CitiesListProps = {
   onCityChange: (city: CityName) => void;
 };
 
-function CitiesList({cities, activeCity, onCityChange}: CitiesListProps) {
+function CitiesListInner({cities, activeCity, onCityChange}: CitiesListProps) {
   const handleCityClick = (city: CityName) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
@@ -35,4 +35,5 @@ function CitiesList({cities, activeCity, onCityChange}: CitiesListProps) {
   );
 }
 
+const CitiesList = memo(CitiesListInner);
 export default CitiesList;

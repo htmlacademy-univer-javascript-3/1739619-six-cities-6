@@ -25,6 +25,9 @@ export const RATING_TITLES: Record<number, string> = {
   1: 'terribly',
 };
 
+// Проверяет, что строка содержит минимум одну букву и одну цифру
+export const passwordStrengthRegex = /(?=.*[a-zA-Z])(?=.*\d)/;
+
 export const URL_MARKER_DEFAULT = '../public/img/pin.svg';
 
 export const URL_MARKER_CURRENT = '../public/img/pin-active.svg';
@@ -105,6 +108,14 @@ export enum APIRoute {
   Login = '/login',
   Logout = '/logout',
   Comments = '/comments',
+}
+
+export enum NameSpace {
+  City = 'city',
+  Offers = 'offers',
+  OfferDetails = 'offerDetails',
+  Reviews = 'reviews',
+  Auth = 'auth',
 }
 
 export const TIMEOUT_SHOW_ERROR = 2000;

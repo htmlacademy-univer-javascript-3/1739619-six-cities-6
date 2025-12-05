@@ -1,18 +1,25 @@
 import {FormEvent, useEffect, useMemo, useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {useNavigate} from 'react-router-dom';
+import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
-import {selectAuthorizationStatus, selectError} from '../../store/selectors.ts';
+import {getAuthorizationStatus, getError} from '../../store/user-process/selectors.ts';
+import {AuthFormState} from '../../types/auth-form-state.ts';
+import HeaderLogo from '../../components/header-logo/header-logo.tsx';
+import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
 
 export default function AuthScreen() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [validationError, setValidationError] = useState('');
-  const authError = useAppSelector(selectError);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const [formState, setFormState] = useState<AuthFormState>({
+    data: {
+      email: '',
+      password: '',
+    },
+    validation: null,
+  });
+  const authError = useAppSelector(getError);
 
   useEffect(() => {
     if (authorizationStatus === AuthorizationStatus.Auth) {
@@ -22,44 +29,37 @@ export default function AuthScreen() {
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
+    const {email, password} = formState.data;
 
-    const passwordHasLetterAndNumber = /(?=.*[a-zA-Z])(?=.*\d)/.test(password);
+    const passwordHasLetterAndNumber = passwordStrengthRegex.test(password);
 
     if (!email || !password.trim()) {
-      setValidationError('Введите email и пароль.');
+      setFormState((prev) => ({...prev, validation: 'Введите email и пароль.'}));
       return;
     }
 
     if (!passwordHasLetterAndNumber) {
-      setValidationError('Пароль должен содержать хотя бы одну букву и цифру.');
+      setFormState((prev) => ({...prev, validation: 'Пароль должен содержать хотя бы одну букву и цифру.'}));
       return;
     }
 
-    setValidationError('');
+    setFormState((prev) => ({...prev, validation: null}));
     dispatch(loginAction({login: email, password}));
   };
 
   const errorMessage = useMemo(
-    () => validationError || authError || '',
-    [authError, validationError]
+    () => formState.validation || authError || '',
+    [authError, formState.validation]
   );
+
+  const {data} = formState;
 
   return (
     <div className="page page--gray page--login">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
-            <div className="header__left">
-              <Link to={AppRoute.Main} className="header__logo-link">
-                <img
-                  className="header__logo"
-                  src="../../../markup/img/logo.svg"
-                  alt="6 cities logo"
-                  width={81}
-                  height={41}
-                />
-              </Link>
-            </div>
+            <HeaderLogo/>
           </div>
         </div>
       </header>
@@ -75,10 +75,13 @@ export default function AuthScreen() {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  value={email}
+                  value={data.email}
                   onChange={(evt) => {
-                    setEmail(evt.target.value);
-                    setValidationError('');
+                    setFormState((prev) => ({
+                      ...prev,
+                      data: {...prev.data, email: evt.target.value},
+                      validation: null,
+                    }));
                   }}
                   required
                 />
@@ -90,10 +93,13 @@ export default function AuthScreen() {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  value={password}
+                  value={data.password}
                   onChange={(evt) => {
-                    setPassword(evt.target.value);
-                    setValidationError('');
+                    setFormState((prev) => ({
+                      ...prev,
+                      data: {...prev.data, password: evt.target.value},
+                      validation: null,
+                    }));
                   }}
                   required
                 />
@@ -110,9 +116,7 @@ export default function AuthScreen() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link to={AppRoute.Main} className="locations__item-link">
-                <span>Amsterdam</span>
-              </Link>
+              <AmsterdamLink/>
             </div>
           </section>
         </div>

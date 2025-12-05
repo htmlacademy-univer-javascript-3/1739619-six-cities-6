@@ -1,3 +1,4 @@
+import {memo} from 'react';
 import PlaceCard from '../place-card/place-card.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 
@@ -13,7 +14,7 @@ const LIST_CLASS_MAP = {
   'near-places': 'near-places__list places__list',
 } as const;
 
-export default function OffersList({offers, variant, setSelectedOfferId}: OffersListProps) {
+function OffersListInner({offers, variant, setSelectedOfferId}: OffersListProps) {
   if (!offers || offers.length === 0) {
     return <p>No places to stay available</p>;
   }
@@ -32,3 +33,6 @@ export default function OffersList({offers, variant, setSelectedOfferId}: Offers
     </div>
   );
 }
+
+const OffersList = memo(OffersListInner);
+export default OffersList;

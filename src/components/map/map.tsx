@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {memo, useEffect, useRef} from 'react';
 import leaflet, {Icon, layerGroup, LayerGroup} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {City} from '../../types/city.ts';
@@ -25,7 +25,7 @@ export type MapProps = {
   className: string;
 };
 
-export default function Map({selectedOfferId, city, offers, className}: MapProps) {
+function MapInner({selectedOfferId, city, offers, className}: MapProps) {
   const mapRef = useRef<HTMLElement | null>(null);
   const markersLayerRef = useRef<LayerGroup | null>(null);
   const map = useMap(mapRef, city);
@@ -72,3 +72,6 @@ export default function Map({selectedOfferId, city, offers, className}: MapProps
 
   return <section className={className} ref={mapRef}/>;
 }
+
+const Map = memo(MapInner);
+export default Map;

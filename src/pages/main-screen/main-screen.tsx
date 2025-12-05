@@ -1,24 +1,25 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState, memo} from 'react';
 import {CITY_NAMES, CITIES, SortingOption, CityName} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
 import {useAppSelector, useAppDispatch} from '../../hooks';
-import {selectCity, selectOffersByCity, selectOffersLoading} from '../../store/selectors.ts';
+import {getCity} from '../../store/city-process/selectors.ts';
+import {getOffersByCity, getOffersLoadingStatus} from '../../store/offers-data/selectors.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
-import {changeCity} from '../../store/action.ts';
+import {changeCity} from '../../store/city-process/city-process.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
 import Header from '../../components/header/header.tsx';
 
 
-export default function MainScreen() {
+function MainScreenInner() {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(selectOffersByCity);
-  const isOffersLoading = useAppSelector(selectOffersLoading);
+  const offers = useAppSelector(getOffersByCity);
+  const isOffersLoading = useAppSelector(getOffersLoadingStatus);
   const offersCount = offers.length;
   const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
-  const currentCity = useAppSelector(selectCity);
+  const currentCity = useAppSelector(getCity);
   const cityName = currentCity.name;
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
   const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
@@ -43,15 +44,15 @@ export default function MainScreen() {
     setSortedOffers(sorted);
   }, [currentSort, offers]);
 
-  const handleCityChange = (city: CityName) => {
+  const handleCityChange = useCallback((city: CityName) => {
     setSelectedOfferId(null);
     setCurrentSort(SortingOption.Popular);
     dispatch(changeCity(CITIES[city]));
-  };
+  }, [dispatch]);
 
-  const handleSortChange = (sort: SortingOption) => {
+  const handleSortChange = useCallback((sort: SortingOption) => {
     setCurrentSort(sort);
-  };
+  },[]);
 
   return (
     <div className="page page--gray page--main">
@@ -100,3 +101,6 @@ export default function MainScreen() {
   );
 }
 
+const MainScreen = memo(MainScreenInner);
+
+export default MainScreen;

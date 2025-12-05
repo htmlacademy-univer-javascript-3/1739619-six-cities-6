@@ -5,28 +5,29 @@ import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
 import NearPlacesList from '../../components/near-places-list/near-places-list.tsx';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {
-  selectCurrentOffer,
-  selectCurrentOfferLoading,
-  selectNearbyOffers,
-  selectOfferReviews,
-  selectOffers,
-  selectAuthorizationStatus
-} from '../../store/selectors.ts';
+import {getCurrentOffer, getCurrentOfferLoadingStatus, getNearbyOffers} from '../../store/offer-details-data/selectors.ts';
+import {getReviews} from '../../store/reviews-data/selectors.ts';
+import {getOffers} from '../../store/offers-data/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
 import {fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 
 export default function OfferScreen() {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(selectOffers);
+  const offers = useAppSelector(getOffers);
   const {offerId} = useParams<{offerId: string}>();
-  const currentOffer = useAppSelector(selectCurrentOffer);
-  const isCurrentOfferLoading = useAppSelector(selectCurrentOfferLoading);
-  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
-  const nearbyOffers = useAppSelector(selectNearbyOffers).slice(0, NEARBY_OFFERS_LIMIT);
-  const offerReviews = useAppSelector(selectOfferReviews);
+  const currentOffer = useAppSelector(getCurrentOffer);
+  const isCurrentOfferLoading = useAppSelector(getCurrentOfferLoadingStatus);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const nearbyOffersAll = useAppSelector(getNearbyOffers);
+  const offerReviews = useAppSelector(getReviews);
+
+  const nearbyOffers = useMemo(
+    () => nearbyOffersAll.slice(0, NEARBY_OFFERS_LIMIT),
+    [nearbyOffersAll]
+  );
 
   useEffect(() => {
     if (offerId) {
