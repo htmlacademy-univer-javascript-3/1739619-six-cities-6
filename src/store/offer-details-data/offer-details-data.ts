@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {fetchNearbyOffersAction, fetchOfferAction} from '../api-actions.ts';
+import {changeFavoriteStatusAction, fetchNearbyOffersAction, fetchOfferAction} from '../api-actions.ts';
 import {OfferDetailsState} from '../../types/offers-state.ts';
 import {NameSpace} from '../../const.ts';
 
@@ -31,6 +31,17 @@ export const offerDetailsData = createSlice({
       })
       .addCase(fetchNearbyOffersAction.rejected, (state) => {
         state.nearby = [];
+      })
+      .addCase(changeFavoriteStatusAction.fulfilled, (state, action) => {
+        const updated = action.payload;
+
+        if (state.data?.id === updated.id) {
+          Object.assign(state.data, updated);
+        }
+
+        state.nearby = state.nearby.map((offer) =>
+          offer.id === updated.id ? { ...offer, ...updated } : offer
+        );
       });
   },
 });

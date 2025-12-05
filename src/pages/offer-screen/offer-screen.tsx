@@ -1,4 +1,5 @@
-import {Navigate, useParams} from 'react-router-dom';
+import {useCallback, useEffect, useMemo} from 'react';
+import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
@@ -7,17 +8,17 @@ import NearPlacesList from '../../components/near-places-list/near-places-list.t
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getCurrentOffer, getCurrentOfferLoadingStatus, getNearbyOffers} from '../../store/offer-details-data/selectors.ts';
 import {getReviews} from '../../store/reviews-data/selectors.ts';
-import {getOffers} from '../../store/offers-data/selectors.ts';
+import {changeFavoriteStatusAction, fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
 import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
-import {fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
+import {getFavoriteOffersCount} from '../../store/favorites-data/selectors.ts';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
-import {useEffect, useMemo} from 'react';
 
 export default function OfferScreen() {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(getOffers);
+  const favoriteOffersCount = useAppSelector(getFavoriteOffersCount);
   const {offerId} = useParams<{offerId: string}>();
+  const navigate = useNavigate();
   const currentOffer = useAppSelector(getCurrentOffer);
   const isCurrentOfferLoading = useAppSelector(getCurrentOfferLoadingStatus);
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
@@ -37,6 +38,16 @@ export default function OfferScreen() {
     }
   }, [dispatch, offerId]);
 
+  const handleFavoriteToggle = useCallback((id: string, isFavorite: boolean) => {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    const status = isFavorite ? 0 : 1;
+    dispatch(changeFavoriteStatusAction({offerId: id, status}));
+  }, [authorizationStatus, dispatch, navigate]);
+
   if (isCurrentOfferLoading) {
     return <Spinner/>;
   }
@@ -44,7 +55,6 @@ export default function OfferScreen() {
     return <Navigate to={AppRoute.NotFound} replace />;
   }
 
-  const favoriteOffersCount = offers.filter((offer) => offer.isFavorite).length;
   const reviewsCount = offerReviews.length;
   const mapOffers = [currentOffer, ...nearbyOffers];
   const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
@@ -83,7 +93,11 @@ export default function OfferScreen() {
                 <h1 className="offer__name">
                   {currentOffer.title}
                 </h1>
-                <button className={bookmarkButtonClassName} type="button">
+                <button
+                  className={bookmarkButtonClassName}
+                  type="button"
+                  onClick={() => handleFavoriteToggle(currentOffer.id, currentOffer.isFavorite)}
+                >
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
@@ -162,7 +176,7 @@ export default function OfferScreen() {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <NearPlacesList offers={nearbyOffers} />
+            <NearPlacesList offers={nearbyOffers} onFavoriteToggle={handleFavoriteToggle} />
           </section>
         </div>
       </main>
