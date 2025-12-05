@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
@@ -38,6 +38,16 @@ export default function OfferScreen() {
     }
   }, [dispatch, offerId]);
 
+  const handleFavoriteToggle = useCallback((id: string, isFavorite: boolean) => {
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    const status = isFavorite ? 0 : 1;
+    dispatch(changeFavoriteStatusAction({offerId: id, status}));
+  }, [authorizationStatus, dispatch, navigate]);
+
   if (isCurrentOfferLoading) {
     return <Spinner/>;
   }
@@ -53,16 +63,6 @@ export default function OfferScreen() {
   const offerType = `${currentOffer.type.charAt(0).toUpperCase()}${currentOffer.type.slice(1)}`;
   const bedroomsText = `${currentOffer.bedrooms} Bedroom${currentOffer.bedrooms !== 1 ? 's' : ''}`;
   const adultsText = `Max ${currentOffer.maxAdults} adult${currentOffer.maxAdults !== 1 ? 's' : ''}`;
-
-  const handleFavoriteToggle = (id: string, isFavorite: boolean) => {
-    if (authorizationStatus !== AuthorizationStatus.Auth) {
-      navigate(AppRoute.Login);
-      return;
-    }
-
-    const status = isFavorite ? 0 : 1;
-    dispatch(changeFavoriteStatusAction({offerId: id, status}));
-  };
 
   return (
     <div className="page">

@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
@@ -34,10 +34,10 @@ export default function FavoritesScreen() {
     }
   }, [authorizationStatus, dispatch]);
 
-  const handleFavoriteToggle = (offerId: OfferPreview['id'], isFavorite: boolean) => {
+  const handleFavoriteToggle = useCallback((offerId: OfferPreview['id'], isFavorite: boolean) => {
     const status = isFavorite ? 0 : 1;
     dispatch(changeFavoriteStatusAction({offerId, status}));
-  };
+  }, [dispatch]);
 
   const groupedOffers = groupOffersByCity(favoriteOffers);
   const cities = Object.keys(groupedOffers);

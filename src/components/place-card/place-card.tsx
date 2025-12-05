@@ -108,5 +108,10 @@ function PlaceCardInner({
   );
 }
 
-const PlaceCard = memo(PlaceCardInner);
+const PlaceCard = memo(
+  PlaceCardInner,
+  (prevProps, nextProps) =>
+    prevProps.offer === nextProps.offer
+    && prevProps.onFavoriteToggle === nextProps.onFavoriteToggle
+);
 export default PlaceCard;
