@@ -1,6 +1,6 @@
 import {AppRoute, CITIES} from '../../const.ts';
 import {Link} from 'react-router-dom';
-import {changeCity} from '../../store/city-process/city-process.ts';
+import {changeCity} from '../../store/city-data/city-data.ts';
 import {useAppDispatch} from '../../hooks';
 import {memo} from 'react';
 

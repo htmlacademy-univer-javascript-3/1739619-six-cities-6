@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {logoutAction} from '../../store/api-actions.ts';
-import {getAuthorizationStatus, getUserData} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus, getUserData} from '../../store/user-data/selectors.ts';
 import HeaderLogo from '../header-logo/header-logo.tsx';
 
 type HeaderProps = {

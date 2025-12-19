@@ -5,15 +5,15 @@ import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
 import {useAppSelector, useAppDispatch} from '../../hooks';
-import {getCity} from '../../store/city-process/selectors.ts';
+import {getCity} from '../../store/city-data/selectors.ts';
 import {getOffersByCity, getOffersLoadingStatus} from '../../store/offers-data/selectors.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
-import {changeCity} from '../../store/city-process/city-process.ts';
+import {changeCity} from '../../store/city-data/city-data.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
 import Header from '../../components/header/header.tsx';
 import NoOffers from '../../components/no-offers/no-offers.tsx';
-import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-data/selectors.ts';
 import {getFavoriteOffersCount} from '../../store/favorites-data/selectors.ts';
 import {changeFavoriteStatusAction} from '../../store/api-actions.ts';
 

@@ -6,7 +6,7 @@ import PlaceCard from '../../components/place-card/place-card.tsx';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
-import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-data/selectors.ts';
 import {
   getFavoriteOffers,
   getFavoriteOffersCount,

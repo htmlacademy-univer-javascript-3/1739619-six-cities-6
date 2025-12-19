@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
-import {getAuthorizationStatus, getError} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus, getError} from '../../store/user-data/selectors.ts';
 import {AuthFormState} from '../../types/auth-form-state.ts';
 import HeaderLogo from '../../components/header-logo/header-logo.tsx';
 import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';

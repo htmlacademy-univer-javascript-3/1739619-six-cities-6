@@ -9,7 +9,7 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getCurrentOffer, getCurrentOfferLoadingStatus, getNearbyOffers} from '../../store/offer-details-data/selectors.ts';
 import {getReviews} from '../../store/reviews-data/selectors.ts';
 import {changeFavoriteStatusAction, fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
-import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-data/selectors.ts';
 import {getFavoriteOffersCount} from '../../store/favorites-data/selectors.ts';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';

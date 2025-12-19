@@ -10,7 +10,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const userProcess = createSlice({
+export const userData = createSlice({
   name: NameSpace.Auth,
   initialState,
   reducers: {
@@ -41,4 +41,4 @@ export const userProcess = createSlice({
   },
 });
 
-export const {requireAuthorization, setError} = userProcess.actions;
+export const {requireAuthorization, setError} = userData.actions;
