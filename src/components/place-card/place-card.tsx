@@ -44,7 +44,7 @@ function PlaceCardInner({
 }: PlaceCardProps) {
   const {id, previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
 
-  const ratingWidth = `${rating * 20}%`;
+  const ratingWidth = `${Math.round(rating) * 20}%`;
   const bookmarkButtonClassName = `place-card__bookmark-button button${isFavorite ? ' place-card__bookmark-button--active' : ''}`;
   const bookmarkButtonText = isFavorite ? 'In bookmarks' : 'To bookmarks';
 
