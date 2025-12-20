@@ -5,4 +5,4 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 
 export const getCurrentOffer = (state: State): Offer | null => state[NameSpace.OfferDetails].data;
 export const getCurrentOfferLoadingStatus = (state: State): boolean => state[NameSpace.OfferDetails].isLoading;
-export const getNearbyOffers = (state: State): OfferPreview[] => state[NameSpace.OfferDetails].nearby;
+export const getNearbyOffers = (state: State): OfferPreview[] => state[NameSpace.OfferDetails].nearbyOffers;

@@ -23,7 +23,7 @@ export const RATING_TITLES: Record<number, string> = {
   3: 'not bad',
   2: 'badly',
   1: 'terribly',
-};
+} as const;
 
 // Проверяет, что строка содержит минимум одну букву и одну цифру
 export const passwordStrengthRegex = /(?=.*[a-zA-Z])(?=.*\d)/;

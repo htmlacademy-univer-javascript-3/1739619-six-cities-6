@@ -17,7 +17,7 @@ export type FavoritesState = {
 export type OfferDetailsState = {
   data: Offer | null;
   isLoading: boolean;
-  nearby: OfferPreview[];
+  nearbyOffers: OfferPreview[];
 };
 
 export type ReviewsState = {

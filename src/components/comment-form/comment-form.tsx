@@ -4,7 +4,7 @@ import { Offer } from '../../types/offer.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getReviewPostingStatus } from '../../store/reviews-data/selectors.ts';
 import { postOfferReviewAction } from '../../store/api-actions.ts';
-import { processErrorHandle } from '../../services/process-error-handle.ts';
+import { handleErrorMessage } from '../../services/handle-error-message.ts';
 import { setError } from '../../store/user-data/user-data.ts';
 
 type CommentFormProps = {
@@ -69,7 +69,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
         dispatch(setError(null));
       })
       .catch(() => {
-        processErrorHandle('Не удалось отправить отзыв. Пожалуйста, попробуйте позже.');
+        handleErrorMessage('Не удалось отправить отзыв. Пожалуйста, попробуйте позже.');
       });
   };
 
