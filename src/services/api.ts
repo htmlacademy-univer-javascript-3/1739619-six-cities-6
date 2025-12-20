@@ -38,15 +38,21 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
-      if (error.response && shouldDisplayError(error.response)) {
-        const detailMessage = (error.response.data);
-
-        processErrorHandle(detailMessage.message);
+      if (error.response) {
+        if (shouldDisplayError(error.response)) {
+          const detailMessage = error.response.data;
+          processErrorHandle(detailMessage.message);
+        }
+      } else {
+        processErrorHandle(
+          'Сервер временно недоступен. Пожалуйста, попробуйте позже.'
+        );
       }
 
       throw error;
     }
   );
+
 
   return api;
 };
