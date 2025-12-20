@@ -6,7 +6,7 @@ import {loginAction} from '../../store/api-actions.ts';
 import {getAuthorizationStatus, getError} from '../../store/user-data/selectors.ts';
 import {AuthFormState} from '../../types/auth-form-state.ts';
 import HeaderLogo from '../../components/header-logo/header-logo.tsx';
-import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
+import RandomCityLink from '../../components/random-city-link/random-city-link.tsx';
 
 export default function AuthScreen() {
   const dispatch = useAppDispatch();
@@ -110,7 +110,7 @@ export default function AuthScreen() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <AmsterdamLink/>
+              <RandomCityLink/>
             </div>
           </section>
         </div>
