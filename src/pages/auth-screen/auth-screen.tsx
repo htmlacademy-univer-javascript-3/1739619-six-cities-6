@@ -1,5 +1,5 @@
-import {FormEvent, useEffect, useMemo, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {FormEvent, useState} from 'react';
+import {Navigate} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
@@ -10,7 +10,6 @@ import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
 
 export default function AuthScreen() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [formState, setFormState] = useState<AuthFormState>({
     data: {
@@ -21,11 +20,9 @@ export default function AuthScreen() {
   });
   const authError = useAppSelector(getError);
 
-  useEffect(() => {
-    if (authorizationStatus === AuthorizationStatus.Auth) {
-      navigate(AppRoute.Main);
-    }
-  }, [authorizationStatus, navigate]);
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    return <Navigate to={AppRoute.Main}/>;
+  }
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -47,10 +44,7 @@ export default function AuthScreen() {
     dispatch(loginAction({login: email, password}));
   };
 
-  const errorMessage = useMemo(
-    () => formState.validation || authError || '',
-    [authError, formState.validation]
-  );
+  const errorMessage = formState.validation || authError || '';
 
   const {data} = formState;
 
@@ -105,7 +99,7 @@ export default function AuthScreen() {
                 />
               </div>
               {errorMessage && (
-                <p className="login__error-message" role="alert" style={{ color: 'red' }}>
+                <p className="login__error-message" role="alert" style={{color: 'red'}}>
                   {errorMessage}
                 </p>
               )}

@@ -5,7 +5,6 @@ import OffersScreen from '../pages/offer-screen/offer-screen.tsx';
 import FavoritesScreen from '../pages/favorites-screen/favorites-screen.tsx';
 import NotFoundPage from '../pages/not-found-page/not-found-page.tsx';
 import PrivateRoute from '../components/protected-route/protected-route.tsx';
-
 import {AppRoute} from '../const.ts';
 
 export default function App() {
