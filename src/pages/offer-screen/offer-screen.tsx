@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT, REVIEWS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
@@ -28,6 +28,13 @@ export default function OfferScreen() {
   const nearbyOffers = useMemo(
     () => nearbyOffersAll.slice(0, NEARBY_OFFERS_LIMIT),
     [nearbyOffersAll]
+  );
+
+  const limitedReviews = useMemo(
+    () => [...offerReviews]
+      .sort((firstReview, secondReview) => new Date(secondReview.date).getTime() - new Date(firstReview.date).getTime())
+      .slice(0, REVIEWS_LIMIT),
+    [offerReviews]
   );
 
   useEffect(() => {
@@ -157,7 +164,7 @@ export default function OfferScreen() {
                 <h2 className="reviews__title">
                   Reviews · <span className="reviews__amount">{reviewsCount}</span>
                 </h2>
-                <ReviewsList reviews={offerReviews}/>
+                <ReviewsList reviews={limitedReviews}/>
                 {authorizationStatus === AuthorizationStatus.Auth && (
                   <CommentForm offerId={currentOffer.id}/>
                 )}

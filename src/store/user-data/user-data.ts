@@ -17,6 +17,7 @@ export const userData = createSlice({
     requireAuthorization: (state, action: PayloadAction<AuthorizationStatus>) => {
       state.status = action.payload;
     },
+
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },

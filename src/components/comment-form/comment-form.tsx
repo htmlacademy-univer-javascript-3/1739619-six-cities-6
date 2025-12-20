@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
-import {MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, RATING_VALUES, RATING_TITLES} from '../../const.ts';
-import {Offer} from '../../types/offer.ts';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getReviewPostingStatus} from '../../store/reviews-data/selectors.ts';
-import {postOfferReviewAction} from '../../store/api-actions.ts';
+import { MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, RATING_VALUES, RATING_TITLES } from '../../const.ts';
+import { Offer } from '../../types/offer.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getReviewPostingStatus } from '../../store/reviews-data/selectors.ts';
+import { postOfferReviewAction } from '../../store/api-actions.ts';
+import { processErrorHandle } from '../../services/process-error-handle.ts';
+import { setError } from '../../store/user-data/user-data.ts';
 
 type CommentFormProps = {
   offerId: Offer['id'];
 };
 
-export default function CommentForm({offerId}: CommentFormProps) {
+export default function CommentForm({ offerId }: CommentFormProps) {
   const dispatch = useAppDispatch();
   const isReviewPosting = useAppSelector(getReviewPostingStatus);
+
+  const error = useAppSelector((state) => state.auth.error);
+
   const [formState, setFormState] = useState({ rating: 0, review: '' });
+
+  const [isTriedSubmit, setIsTriedSubmit] = useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    if (isTriedSubmit) {
+      setIsTriedSubmit(false);
+    }
+
+    if (error) {
+      dispatch(setError(null));
+    }
+
     const { name, value } = event.target;
     setFormState((prevState) => ({
       ...prevState,
@@ -34,17 +49,28 @@ export default function CommentForm({offerId}: CommentFormProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setIsTriedSubmit(true);
+
     if (isSubmitDisabled || isReviewPosting) {
       return;
     }
 
-    void dispatch(postOfferReviewAction({
-      offerId,
-      comment: formState.review.trim(),
-      rating: formState.rating
-    }))
+    void dispatch(
+      postOfferReviewAction({
+        offerId,
+        comment: formState.review.trim(),
+        rating: formState.rating,
+      })
+    )
       .unwrap()
-      .then(() => setFormState({rating: 0, review: ''}));
+      .then(() => {
+        setFormState({ rating: 0, review: '' });
+        setIsTriedSubmit(false);
+        dispatch(setError(null));
+      })
+      .catch(() => {
+        processErrorHandle('Не удалось отправить отзыв. Пожалуйста, попробуйте позже.');
+      });
   };
 
   return (
@@ -89,6 +115,12 @@ export default function CommentForm({offerId}: CommentFormProps) {
         maxLength={MAX_REVIEW_LENGTH}
         disabled={isReviewPosting}
       />
+
+      {isTriedSubmit && error && (
+        <p className="form__error" role="alert" style={{ color: 'red', marginTop: 5 }}>
+          {error}
+        </p>
+      )}
 
       <div className="reviews__button-wrapper">
         <p className="reviews__help">

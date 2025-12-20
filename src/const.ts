@@ -33,6 +33,7 @@ export const URL_MARKER_DEFAULT = '../public/img/pin.svg';
 export const URL_MARKER_CURRENT = '../public/img/pin-active.svg';
 
 export const NEARBY_OFFERS_LIMIT = 3;
+export const REVIEWS_LIMIT = 10;
 
 export const CITIES: Record<string, { name: string; location: Location }> = {
   Paris: {

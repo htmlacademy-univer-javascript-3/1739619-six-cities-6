@@ -140,11 +140,10 @@ export const logoutAction = createAsyncThunk<void, undefined, {
 export const clearErrorAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
 }>(
-  'data/clearError',
+  'app/clearError',
   (_arg, {dispatch}) => {
-    setTimeout(
-      () => dispatch(setError(null)),
-      TIMEOUT_SHOW_ERROR,
-    );
+    setTimeout(() => {
+      dispatch(setError(null));
+    }, TIMEOUT_SHOW_ERROR);
   },
 );
