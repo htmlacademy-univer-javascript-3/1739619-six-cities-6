@@ -14,12 +14,16 @@ export const userData = createSlice({
   name: NameSpace.Auth,
   initialState,
   reducers: {
-    requireAuthorization: (state, action: PayloadAction<AuthorizationStatus>) => {
+    authorizationStatus: (state, action: PayloadAction<AuthorizationStatus>) => {
       state.status = action.payload;
     },
 
-    setError: (state, action: PayloadAction<string | null>) => {
+    errorMessage: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
+    },
+
+    errorReset: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -53,4 +57,4 @@ export const userData = createSlice({
   },
 });
 
-export const {requireAuthorization, setError} = userData.actions;
+export const {authorizationStatus, errorMessage, errorReset} = userData.actions;

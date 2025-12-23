@@ -8,8 +8,8 @@ export const cityData = createSlice({
   name: NameSpace.City,
   initialState,
   reducers: {
-    changeCity: (_state, action: PayloadAction<City>) => action.payload,
+    currentCity: (_state, action: PayloadAction<City>) => action.payload,
   },
 });
 
-export const {changeCity} = cityData.actions;
+export const {currentCity} = cityData.actions;

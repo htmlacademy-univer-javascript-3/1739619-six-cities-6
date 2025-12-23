@@ -11,7 +11,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getReviewPostingStatus } from '../../store/reviews-data/selectors.ts';
 import { postOfferReviewAction } from '../../store/api-actions.ts';
 import { handleErrorMessage } from '../../services/handle-error-message.ts';
-import { setError } from '../../store/user-data/user-data.ts';
+import { getError } from '../../store/user-data/selectors.ts';
+import { errorReset } from '../../store/user-data/user-data.ts';
 
 type CommentFormProps = {
   offerId: Offer['id'];
@@ -21,7 +22,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
   const dispatch = useAppDispatch();
   const isReviewPosting = useAppSelector(getReviewPostingStatus);
 
-  const error = useAppSelector((state) => state.auth.error);
+  const error = useAppSelector(getError);
 
   const [formState, setFormState] = useState({ rating: 0, review: '' });
 
@@ -35,7 +36,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
     }
 
     if (error) {
-      dispatch(setError(null));
+      dispatch(errorReset());
     }
 
     const { name, value } = event.target;
@@ -72,7 +73,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
       .then(() => {
         setFormState({ rating: 0, review: '' });
         setIsTriedSubmit(false);
-        dispatch(setError(null));
+        dispatch(errorReset());
       })
       .catch(() => {
         handleErrorMessage('Не удалось отправить отзыв. Пожалуйста, попробуйте позже.');

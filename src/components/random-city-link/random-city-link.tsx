@@ -2,7 +2,7 @@ import {memo, useMemo} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute, CITIES, CITY_NAMES, CityName} from '../../const.ts';
 import {useAppDispatch} from '../../hooks';
-import {changeCity} from '../../store/city-data/city-data.ts';
+import {currentCity} from '../../store/city-data/city-data.ts';
 
 function RandomCityLinkInner() {
   const dispatch = useAppDispatch();
@@ -11,7 +11,7 @@ function RandomCityLinkInner() {
     []
   );
 
-  const handleCityClick = () => dispatch(changeCity(CITIES[cityName]));
+  const handleCityClick = () => dispatch(currentCity(CITIES[cityName]));
 
   return (
     <Link to={AppRoute.Main} className="locations__item-link" onClick={handleCityClick}>

@@ -16,7 +16,7 @@ import {useAppSelector, useAppDispatch} from '../../hooks';
 import {getCity} from '../../store/city-data/selectors.ts';
 import {getOffersByCity, getOffersLoadingStatus} from '../../store/offers-data/selectors.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
-import {changeCity} from '../../store/city-data/city-data.ts';
+import {currentCity} from '../../store/city-data/city-data.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
 import Header from '../../components/header/header.tsx';
@@ -32,8 +32,8 @@ function MainScreenInner() {
   const isOffersLoading = useAppSelector(getOffersLoadingStatus);
   const offersCount = offers.length;
   const favoriteOffersCount = useAppSelector(getFavoriteOffersCount);
-  const currentCity = useAppSelector(getCity);
-  const cityName = currentCity.name;
+  const selectedCity = useAppSelector(getCity);
+  const cityName = selectedCity.name;
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
   const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
@@ -61,7 +61,7 @@ function MainScreenInner() {
   const handleCityChange = useCallback((city: CityName) => {
     setSelectedOfferId(null);
     setCurrentSort(SortingOption.Popular);
-    dispatch(changeCity(CITIES[city]));
+    dispatch(currentCity(CITIES[city]));
   }, [dispatch]);
 
   const handleSortChange = useCallback((sort: SortingOption) => {
@@ -116,7 +116,7 @@ function MainScreenInner() {
                   </section>
                   <div className="cities__right-section">
                     <Map
-                      city={currentCity}
+                      city={selectedCity}
                       offers={offers}
                       selectedOfferId={selectedOfferId}
                       className='cities__map map'
