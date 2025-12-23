@@ -1,5 +1,6 @@
 import {MouseEvent, memo} from 'react';
-import {CityName} from '../../const.ts';
+import {Link} from 'react-router-dom';
+import {AppRoute, CityName} from '../../const.ts';
 
 type CitiesListProps = {
   cities: readonly CityName[];
@@ -22,13 +23,13 @@ function CitiesListInner({cities, activeCity, onCityChange}: CitiesListProps) {
     <ul className="locations__list tabs__list">
       {cities.map((city) => (
         <li className="locations__item" key={city}>
-          <a
+          <Link
             className={`locations__item-link tabs__item${city === activeCity ? ' tabs__item--active' : ''}`}
-            href="#"
+            to={AppRoute.Main}
             onClick={handleCityClick(city)}
           >
             <span>{city}</span>
-          </a>
+          </Link>
         </li>
       ))}
     </ul>

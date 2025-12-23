@@ -4,7 +4,7 @@ import AuthScreen from '../pages/auth-screen/auth-screen.tsx';
 import OffersScreen from '../pages/offer-screen/offer-screen.tsx';
 import FavoritesScreen from '../pages/favorites-screen/favorites-screen.tsx';
 import NotFoundPage from '../pages/not-found-page/not-found-page.tsx';
-import PrivateRoute from '../components/protected-route/protected-route.tsx';
+import ProtectedRoute from '../components/protected-route/protected-route.tsx';
 import {AppRoute} from '../const.ts';
 
 export default function App() {
@@ -24,9 +24,9 @@ export default function App() {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute>
+            <ProtectedRoute>
               <FavoritesScreen/>
-            </PrivateRoute>
+            </ProtectedRoute>
           }
         />
         <Route
