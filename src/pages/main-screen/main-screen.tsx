@@ -41,6 +41,8 @@ function MainScreenInner() {
   const [sortedOffers, setSortedOffers] = useState<OfferPreview[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
+
     let sorted;
     switch (currentSort) {
       case SortingOption.PriceLowToHigh:
@@ -55,7 +57,13 @@ function MainScreenInner() {
       default:
         sorted = [...offers];
     }
-    setSortedOffers(sorted);
+    if (isMounted) {
+      setSortedOffers(sorted);
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, [currentSort, offers]);
 
   const handleCityChange = useCallback((city: CityName) => {

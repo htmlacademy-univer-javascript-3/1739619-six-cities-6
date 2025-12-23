@@ -14,6 +14,8 @@ export default function useMap(
   const isRenderedRef = useRef(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (mapRef.current !== null && !isRenderedRef.current) {
       const {latitude, longitude, zoom} = city.location;
 
@@ -28,9 +30,16 @@ export default function useMap(
 
       mapInstance.addLayer(layer);
 
-      setMap(mapInstance);
-      isRenderedRef.current = true;
+      if (isMounted) {
+        setMap(mapInstance);
+        isRenderedRef.current = true;
+      }
     }
+
+    return () => {
+      isMounted = false;
+    };
+
   }, [mapRef, city]);
 
   return map;
