@@ -1,6 +1,13 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, FavoriteStatus, NEARBY_OFFERS_LIMIT, REVIEWS_LIMIT} from '../../const.ts';
+import {
+  AppRoute,
+  AuthorizationStatus,
+  FavoriteStatus, HOST_AVATAR_SIZE,
+  NEARBY_OFFERS_LIMIT, OFFER_BOOKMARK_ICON_SIZE,
+  RATING_PERCENT_PER_STAR,
+  REVIEWS_LIMIT
+} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
@@ -64,7 +71,7 @@ export default function OfferScreen() {
 
   const reviewsCount = offerReviews.length;
   const mapOffers = [currentOffer, ...nearbyOffers];
-  const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
+  const ratingWidth = `${Math.round(currentOffer.rating) * RATING_PERCENT_PER_STAR}%`;
   const bookmarkButtonClassName = `offer__bookmark-button button${currentOffer.isFavorite ? ' offer__bookmark-button--active' : ''}`;
   const bookmarkButtonText = currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks';
   const offerType = `${currentOffer.type.charAt(0).toUpperCase()}${currentOffer.type.slice(1)}`;
@@ -105,7 +112,7 @@ export default function OfferScreen() {
                   type="button"
                   onClick={() => handleFavoriteToggle(currentOffer.id, currentOffer.isFavorite)}
                 >
-                  <svg className="offer__bookmark-icon" width={31} height={33}>
+                  <svg className="offer__bookmark-icon" width={OFFER_BOOKMARK_ICON_SIZE.width} height={OFFER_BOOKMARK_ICON_SIZE.height}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
                   <span className="visually-hidden">{bookmarkButtonText}</span>
@@ -146,8 +153,8 @@ export default function OfferScreen() {
                     <img
                       className="offer__avatar user__avatar"
                       src={currentOffer.host.avatarUrl}
-                      width={74}
-                      height={74}
+                      width={HOST_AVATAR_SIZE.width}
+                      height={HOST_AVATAR_SIZE.height}
                       alt="Host avatar"
                     />
                   </div>

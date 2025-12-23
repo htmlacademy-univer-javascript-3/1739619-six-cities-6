@@ -1,6 +1,6 @@
 import {useCallback, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus, FOOTER_LOGO_SIZE} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import PlaceCard from '../../components/place-card/place-card.tsx';
 import {useAppDispatch, useAppSelector} from '../../hooks';
@@ -96,8 +96,8 @@ export default function FavoritesScreen() {
             className="footer__logo"
             src="../../../markup/img/logo.svg"
             alt="6 cities logo"
-            width={64}
-            height={33}
+            width={FOOTER_LOGO_SIZE.width}
+            height={FOOTER_LOGO_SIZE.height}
           />
         </Link>
       </footer>

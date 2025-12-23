@@ -19,8 +19,11 @@ export enum FavoriteStatus {
   Favorite = 1,
 }
 
-export const MIN_REVIEW_LENGTH = 50;
-export const MAX_REVIEW_LENGTH = 300;
+export const REVIEW_LENGTH = {
+  min: 50,
+  max: 300,
+} as const;
+
 export const RATING_VALUES = [5, 4, 3, 2, 1] as const;
 export const RATING_TITLES: Record<number, string> = {
   5: 'perfect',
@@ -28,6 +31,48 @@ export const RATING_TITLES: Record<number, string> = {
   3: 'not bad',
   2: 'badly',
   1: 'terribly',
+} as const;
+
+export const RATING_PERCENT_PER_STAR = 20;
+
+export const RATING_STAR_SIZE = {
+  width: 37,
+  height: 33,
+} as const;
+
+export const OFFER_BOOKMARK_ICON_SIZE = {
+  width: 31,
+  height: 33,
+} as const;
+
+export const FOOTER_LOGO_SIZE = {
+  width: 64,
+  height: 33,
+} as const;
+
+export const HOST_AVATAR_SIZE = {
+  width: 74,
+  height: 74,
+} as const;
+
+export const USER_AVATAR_SIZE = {
+  width: 54,
+  height: 54,
+} as const;
+
+export const HEADER_LOGO_SIZE = {
+  width: 81,
+  height: 41,
+} as const;
+
+export const FORM_ERROR_MARGIN_TOP = 5;
+
+export const MARKER_ICON_SIZE: [number, number] = [27, 39];
+export const MARKER_ICON_ANCHOR: [number, number] = [13, 39];
+
+export const ARROW_ICON_SIZE = {
+  width: 7,
+  height: 4,
 } as const;
 
 // Проверяет, что строка содержит минимум одну букву и одну цифру

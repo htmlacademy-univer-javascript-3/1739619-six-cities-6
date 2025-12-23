@@ -4,18 +4,18 @@ import 'leaflet/dist/leaflet.css';
 import {City} from '../../types/city.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import useMap from '../../hooks/use-map.ts';
-import {URL_MARKERS} from '../../const.ts';
+import {MARKER_ICON_ANCHOR, MARKER_ICON_SIZE, URL_MARKERS} from '../../const.ts';
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKERS.default,
-  iconSize: [27, 39],
-  iconAnchor: [13, 39]
+  iconSize: MARKER_ICON_SIZE,
+  iconAnchor: MARKER_ICON_ANCHOR
 });
 
 const currentCustomIcon = new Icon({
   iconUrl: URL_MARKERS.current,
-  iconSize: [27, 39],
-  iconAnchor: [13, 39]
+  iconSize: MARKER_ICON_SIZE,
+  iconAnchor: MARKER_ICON_ANCHOR
 });
 
 export type MapProps = {

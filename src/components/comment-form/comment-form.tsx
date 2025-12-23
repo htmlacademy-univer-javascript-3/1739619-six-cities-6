@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { MIN_REVIEW_LENGTH, MAX_REVIEW_LENGTH, RATING_VALUES, RATING_TITLES } from '../../const.ts';
+import {
+  REVIEW_LENGTH,
+  RATING_VALUES,
+  RATING_TITLES,
+  RATING_STAR_SIZE,
+  FORM_ERROR_MARGIN_TOP
+} from '../../const.ts';
 import { Offer } from '../../types/offer.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getReviewPostingStatus } from '../../store/reviews-data/selectors.ts';
@@ -43,8 +49,8 @@ export default function CommentForm({ offerId }: CommentFormProps) {
 
   const isSubmitDisabled =
     formState.rating === 0 ||
-    reviewLength < MIN_REVIEW_LENGTH ||
-    reviewLength > MAX_REVIEW_LENGTH;
+    reviewLength < REVIEW_LENGTH.min ||
+    reviewLength > REVIEW_LENGTH.max;
 
   const handleReviewFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,7 +103,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
               className="reviews__rating-label form__rating-label"
               title={RATING_TITLES[value]}
             >
-              <svg className="form__star-image" width={37} height={33}>
+              <svg className="form__star-image" width={RATING_STAR_SIZE.width} height={RATING_STAR_SIZE.height}>
                 <use xlinkHref="#icon-star" />
               </svg>
             </label>
@@ -112,12 +118,12 @@ export default function CommentForm({ offerId }: CommentFormProps) {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={formState.review}
         onChange={handleReviewInputChange}
-        maxLength={MAX_REVIEW_LENGTH}
+        maxLength={REVIEW_LENGTH.max}
         disabled={isReviewPosting}
       />
 
       {isTriedSubmit && error && (
-        <p className="form__error" role="alert" style={{ color: 'red', marginTop: 5 }}>
+        <p className="form__error" role="alert" style={{ color: 'red', marginTop: FORM_ERROR_MARGIN_TOP }}>
           {error}
         </p>
       )}
@@ -126,8 +132,8 @@ export default function CommentForm({ offerId }: CommentFormProps) {
         <p className="reviews__help">
           To submit review please make sure to set{' '}
           <span className="reviews__star">rating</span> and describe your stay with
-          at least <b className="reviews__text-amount">{MIN_REVIEW_LENGTH} characters</b>{' '}
-          (up to {MAX_REVIEW_LENGTH}).
+          at least <b className="reviews__text-amount">{REVIEW_LENGTH.min} characters</b>{' '}
+          (up to {REVIEW_LENGTH.max}).
         </p>
         <button
           className="reviews__submit form__submit button"
