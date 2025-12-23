@@ -21,7 +21,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
 
   const [isTriedSubmit, setIsTriedSubmit] = useState(false);
 
-  const handleChange = (
+  const handleReviewInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (isTriedSubmit) {
@@ -46,7 +46,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
     reviewLength < MIN_REVIEW_LENGTH ||
     reviewLength > MAX_REVIEW_LENGTH;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleReviewFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setIsTriedSubmit(true);
@@ -74,7 +74,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
   };
 
   return (
-    <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>
+    <form className="reviews__form form" action="#" method="post" onSubmit={handleReviewFormSubmit}>
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -89,7 +89,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
               id={`${value}-stars`}
               type="radio"
               checked={formState.rating === value}
-              onChange={handleChange}
+              onChange={handleReviewInputChange}
               disabled={isReviewPosting}
             />
             <label
@@ -111,7 +111,7 @@ export default function CommentForm({ offerId }: CommentFormProps) {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={formState.review}
-        onChange={handleChange}
+        onChange={handleReviewInputChange}
         maxLength={MAX_REVIEW_LENGTH}
         disabled={isReviewPosting}
       />

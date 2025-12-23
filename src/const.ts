@@ -28,9 +28,10 @@ export const RATING_TITLES: Record<number, string> = {
 // Проверяет, что строка содержит минимум одну букву и одну цифру
 export const passwordStrengthRegex = /(?=.*[a-zA-Z])(?=.*\d)/;
 
-export const URL_MARKER_DEFAULT = '../public/img/pin.svg';
-
-export const URL_MARKER_CURRENT = '../public/img/pin-active.svg';
+export const URL_MARKERS = {
+  default: '../public/img/pin.svg',
+  current: '../public/img/pin-active.svg',
+} as const;
 
 export const NEARBY_OFFERS_LIMIT = 3;
 export const REVIEWS_LIMIT = 10;
