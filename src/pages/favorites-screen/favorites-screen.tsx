@@ -1,6 +1,6 @@
 import {useCallback, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import PlaceCard from '../../components/place-card/place-card.tsx';
 import {useAppDispatch, useAppSelector} from '../../hooks';
@@ -35,7 +35,7 @@ export default function FavoritesScreen() {
   }, [authorizationStatus, dispatch]);
 
   const handleFavoriteToggle = useCallback((offerId: OfferPreview['id'], isFavorite: boolean) => {
-    const status = isFavorite ? 0 : 1;
+    const status = isFavorite ? FavoriteStatus.NotFavorite : FavoriteStatus.Favorite;
     dispatch(changeFavoriteStatusAction({offerId, status}));
   }, [dispatch]);
 

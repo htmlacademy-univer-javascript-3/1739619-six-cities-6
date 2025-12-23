@@ -14,6 +14,11 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
+export enum FavoriteStatus {
+  NotFavorite = 0,
+  Favorite = 1,
+}
+
 export const MIN_REVIEW_LENGTH = 50;
 export const MAX_REVIEW_LENGTH = 300;
 export const RATING_VALUES = [5, 4, 3, 2, 1] as const;

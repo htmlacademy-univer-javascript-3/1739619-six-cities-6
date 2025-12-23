@@ -1,6 +1,14 @@
 import {useCallback, useEffect, useState, memo} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {CITY_NAMES, CITIES, SortingOption, CityName, AppRoute, AuthorizationStatus} from '../../const.ts';
+import {
+  CITY_NAMES,
+  CITIES,
+  SortingOption,
+  CityName,
+  AppRoute,
+  AuthorizationStatus,
+  FavoriteStatus
+} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
@@ -66,7 +74,7 @@ function MainScreenInner() {
       return;
     }
 
-    const status = isFavorite ? 0 : 1;
+    const status = isFavorite ? FavoriteStatus.NotFavorite : FavoriteStatus.Favorite;
     dispatch(changeFavoriteStatusAction({offerId, status}));
   }, [authorizationStatus, dispatch, navigate]);
 

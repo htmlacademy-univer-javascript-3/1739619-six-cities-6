@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT, REVIEWS_LIMIT} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus, NEARBY_OFFERS_LIMIT, REVIEWS_LIMIT} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
@@ -51,7 +51,7 @@ export default function OfferScreen() {
       return;
     }
 
-    const status = isFavorite ? 0 : 1;
+    const status = isFavorite ? FavoriteStatus.NotFavorite : FavoriteStatus.Favorite;
     dispatch(changeFavoriteStatusAction({offerId: id, status}));
   }, [authorizationStatus, dispatch, navigate]);
 

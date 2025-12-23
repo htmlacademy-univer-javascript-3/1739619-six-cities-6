@@ -1,6 +1,7 @@
 import {OfferPreview} from './offers-preview.ts';
+import {FavoriteStatus} from '../const.ts';
 
 export type FavoritesStatusData = {
   offerId: OfferPreview['id'];
-  status: 0 | 1;
+  status: FavoriteStatus;
 };
