@@ -109,7 +109,7 @@ function MainScreenInner() {
                     <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
                     <OffersList
                       offers={sortedOffers}
-                      setSelectedOfferId={setSelectedOfferId}
+                      onSelectedOfferIdChange={setSelectedOfferId}
                       variant='cities'
                       onFavoriteToggle={handleFavoriteToggle}
                     />

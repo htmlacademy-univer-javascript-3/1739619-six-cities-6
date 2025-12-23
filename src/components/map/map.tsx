@@ -6,6 +6,13 @@ import {OfferPreview} from '../../types/offers-preview.ts';
 import useMap from '../../hooks/use-map.ts';
 import {MARKER_ICON_ANCHOR, MARKER_ICON_SIZE, URL_MARKERS} from '../../const.ts';
 
+export type MapProps = {
+  city: City;
+  offers: OfferPreview[];
+  selectedOfferId: string | null;
+  className: string;
+};
+
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKERS.default,
   iconSize: MARKER_ICON_SIZE,
@@ -17,13 +24,6 @@ const currentCustomIcon = new Icon({
   iconSize: MARKER_ICON_SIZE,
   iconAnchor: MARKER_ICON_ANCHOR
 });
-
-export type MapProps = {
-  city: City;
-  offers: OfferPreview[];
-  selectedOfferId: string | null;
-  className: string;
-};
 
 function MapInner({selectedOfferId, city, offers, className}: MapProps) {
   const mapRef = useRef<HTMLElement | null>(null);

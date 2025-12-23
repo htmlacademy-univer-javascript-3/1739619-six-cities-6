@@ -77,6 +77,8 @@ export default function OfferScreen() {
   const offerType = `${currentOffer.type.charAt(0).toUpperCase()}${currentOffer.type.slice(1)}`;
   const bedroomsText = `${currentOffer.bedrooms} Bedroom${currentOffer.bedrooms !== 1 ? 's' : ''}`;
   const adultsText = `Max ${currentOffer.maxAdults} adult${currentOffer.maxAdults !== 1 ? 's' : ''}`;
+  const uniqueImages = Array.from(new Set(currentOffer.images));
+  const uniqueGoods = Array.from(new Set(currentOffer.goods));
 
   return (
     <div className="page">
@@ -85,7 +87,7 @@ export default function OfferScreen() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images.map((image) => (
+              {uniqueImages.map((image) => (
                 <div className="offer__image-wrapper" key={image}>
                   <img
                     className="offer__image"
@@ -139,7 +141,7 @@ export default function OfferScreen() {
               <div className="offer__inside">
                 <h2 className="offer__inside-title">{'What\'s inside'}</h2>
                 <ul className="offer__inside-list">
-                  {currentOffer.goods.map((good) => (
+                  {uniqueGoods.map((good) => (
                     <li className="offer__inside-item" key={good}>
                       {good}
                     </li>

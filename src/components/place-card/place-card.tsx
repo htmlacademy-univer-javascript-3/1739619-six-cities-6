@@ -1,9 +1,7 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-
 import { AppRoute, RATING_PERCENT_PER_STAR } from '../../const';
 import { OfferPreview } from '../../types/offers-preview';
-
 import {
   CARD_CLASS_MAP,
   IMAGE_WRAPPER_CLASS_MAP,
