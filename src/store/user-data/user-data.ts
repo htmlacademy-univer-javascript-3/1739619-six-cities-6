@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AuthorizationStatus, NameSpace} from '../../const.ts';
 import {AuthState} from '../../types/offers-state.ts';
 import {UserData} from '../../types/user-data.ts';
-import {loginAction, logoutAction} from '../api-actions.ts';
+import {checkAuthAction, loginAction, logoutAction} from '../api-actions.ts';
 
 const initialState: AuthState = {
   status: AuthorizationStatus.Unknown,
@@ -10,19 +10,35 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const userProcess = createSlice({
+export const userData = createSlice({
   name: NameSpace.Auth,
   initialState,
   reducers: {
-    requireAuthorization: (state, action: PayloadAction<AuthorizationStatus>) => {
+    authorizationStatus: (state, action: PayloadAction<AuthorizationStatus>) => {
       state.status = action.payload;
     },
-    setError: (state, action: PayloadAction<string | null>) => {
+
+    errorMessage: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
+    },
+
+    errorReset: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(checkAuthAction.fulfilled, (state, action: PayloadAction<UserData>) => {
+        state.status = AuthorizationStatus.Auth;
+        state.user = action.payload;
+      })
+      .addCase(checkAuthAction.pending, (state) => {
+        state.status = AuthorizationStatus.Unknown;
+      })
+      .addCase(checkAuthAction.rejected, (state) => {
+        state.status = AuthorizationStatus.NoAuth;
+        state.user = null;
+      })
       .addCase(loginAction.fulfilled, (state, action: PayloadAction<UserData>) => {
         state.status = AuthorizationStatus.Auth;
         state.user = action.payload;
@@ -41,4 +57,4 @@ export const userProcess = createSlice({
   },
 });
 
-export const {requireAuthorization, setError} = userProcess.actions;
+export const {authorizationStatus, errorMessage, errorReset} = userData.actions;

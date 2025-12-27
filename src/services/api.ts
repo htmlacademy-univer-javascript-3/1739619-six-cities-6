@@ -1,20 +1,18 @@
-import axios, {AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
+import axios, {AxiosError, AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 import {getToken} from './token';
 import {StatusCodes} from 'http-status-codes';
-import {processErrorHandle} from './process-error-handle.ts';
+import {handleErrorMessage} from './handle-error-message.ts';
 
 type DetailMessageType = {
   type: string;
   message: string;
 }
 
-const StatusCodeMapping: Record<number, boolean> = {
-  [StatusCodes.BAD_REQUEST]: true,
-  [StatusCodes.UNAUTHORIZED]: true,
-  [StatusCodes.NOT_FOUND]: true
-};
-
-const shouldDisplayError = (response: AxiosResponse) => StatusCodeMapping[response.status];
+const errorStatusCodes = new Set<number>([
+  StatusCodes.BAD_REQUEST,
+  StatusCodes.UNAUTHORIZED,
+  StatusCodes.NOT_FOUND
+]);
 
 const SERVER_URL = 'https://14.design.htmlacademy.pro/six-cities';
 const REQUEST_TIMEOUT = 5000;
@@ -38,15 +36,21 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<DetailMessageType>) => {
-      if (error.response && shouldDisplayError(error.response)) {
-        const detailMessage = (error.response.data);
-
-        processErrorHandle(detailMessage.message);
+      if (error.response) {
+        if (errorStatusCodes.has(error.response.status)) {
+          const detailMessage = error.response.data;
+          handleErrorMessage(detailMessage.message);
+        }
+      } else {
+        handleErrorMessage(
+          'Сервер временно недоступен. Пожалуйста, попробуйте позже.'
+        );
       }
 
       throw error;
     }
   );
+
 
   return api;
 };

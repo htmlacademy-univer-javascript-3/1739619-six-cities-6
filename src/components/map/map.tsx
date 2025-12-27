@@ -4,19 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import {City} from '../../types/city.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import useMap from '../../hooks/use-map.ts';
-import {URL_MARKER_CURRENT, URL_MARKER_DEFAULT} from '../../const.ts';
-
-const defaultCustomIcon = new Icon({
-  iconUrl: URL_MARKER_DEFAULT,
-  iconSize: [27, 39],
-  iconAnchor: [13, 39]
-});
-
-const currentCustomIcon = new Icon({
-  iconUrl: URL_MARKER_CURRENT,
-  iconSize: [27, 39],
-  iconAnchor: [13, 39]
-});
+import {MARKER_ICON_ANCHOR, MARKER_ICON_SIZE, URL_MARKERS} from '../../const.ts';
 
 export type MapProps = {
   city: City;
@@ -24,6 +12,18 @@ export type MapProps = {
   selectedOfferId: string | null;
   className: string;
 };
+
+const defaultCustomIcon = new Icon({
+  iconUrl: URL_MARKERS.default,
+  iconSize: MARKER_ICON_SIZE,
+  iconAnchor: MARKER_ICON_ANCHOR
+});
+
+const currentCustomIcon = new Icon({
+  iconUrl: URL_MARKERS.current,
+  iconSize: MARKER_ICON_SIZE,
+  iconAnchor: MARKER_ICON_ANCHOR
+});
 
 function MapInner({selectedOfferId, city, offers, className}: MapProps) {
   const mapRef = useRef<HTMLElement | null>(null);

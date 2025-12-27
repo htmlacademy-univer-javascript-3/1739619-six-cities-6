@@ -1,39 +1,27 @@
-import {memo} from 'react';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
-import {OfferPreview} from '../../types/offers-preview.ts';
+import { memo } from 'react';
+import { Link } from 'react-router-dom';
+import { AppRoute, RATING_PERCENT_PER_STAR } from '../../const';
+import { OfferPreview } from '../../types/offers-preview';
+import {
+  CARD_CLASS_MAP,
+  IMAGE_WRAPPER_CLASS_MAP,
+  INFO_CLASS_MAP,
+  IMAGE_SIZE_MAP,
+  BOOKMARK_TEXT,
+  PREMIUM_LABEL,
+  BOOKMARK_ICON_SIZE,
+} from './place-card.const';
 
 type PlaceCardProps = {
   offer: OfferPreview;
   variant: 'cities' | 'favorites' | 'near-places';
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  onFavoriteToggle?: (offerId: OfferPreview['id'], isFavorite: boolean) => void;
+  onFavoriteToggle?: (
+    offerId: OfferPreview['id'],
+    isFavorite: boolean
+  ) => void;
 };
-
-const CARD_CLASS_MAP = {
-  cities: 'cities__card place-card',
-  favorites: 'favorites__card place-card',
-  'near-places': 'near-places__card place-card',
-} as const;
-
-const IMAGE_WRAPPER_CLASS_MAP = {
-  cities: 'cities__image-wrapper place-card__image-wrapper',
-  favorites: 'favorites__image-wrapper place-card__image-wrapper',
-  'near-places': 'near-places__image-wrapper place-card__image-wrapper',
-} as const;
-
-const INFO_CLASS_MAP = {
-  cities: 'place-card__info',
-  favorites: 'favorites__card-info place-card__info',
-  'near-places': 'place-card__info',
-} as const;
-
-const IMAGE_SIZE_MAP = {
-  cities: {width: 260, height: 200},
-  favorites: {width: 150, height: 110},
-  'near-places': {width: 260, height: 200},
-} as const;
 
 function PlaceCardInner({
   offer,
@@ -42,11 +30,27 @@ function PlaceCardInner({
   onMouseLeave,
   onFavoriteToggle,
 }: PlaceCardProps) {
-  const {id, previewImage, title, price, type, rating, isPremium, isFavorite} = offer;
+  const {
+    id,
+    previewImage,
+    title,
+    price,
+    type,
+    rating,
+    isPremium,
+    isFavorite,
+  } = offer;
 
-  const ratingWidth = `${rating * 20}%`;
-  const bookmarkButtonClassName = `place-card__bookmark-button button${isFavorite ? ' place-card__bookmark-button--active' : ''}`;
-  const bookmarkButtonText = isFavorite ? 'In bookmarks' : 'To bookmarks';
+  const ratingWidth = `${Math.round(rating) * RATING_PERCENT_PER_STAR}%`;
+
+  const bookmarkButtonClassName =
+    `place-card__bookmark-button button${
+      isFavorite ? ' place-card__bookmark-button--active' : ''
+    }`;
+
+  const bookmarkButtonText = isFavorite
+    ? BOOKMARK_TEXT.active
+    : BOOKMARK_TEXT.inactive;
 
   return (
     <article
@@ -56,9 +60,10 @@ function PlaceCardInner({
     >
       {isPremium && (
         <div className="place-card__mark">
-          <span>Premium</span>
+          <span>{PREMIUM_LABEL}</span>
         </div>
       )}
+
       <div className={IMAGE_WRAPPER_CLASS_MAP[variant]}>
         <Link to={`${AppRoute.Offer}/${id}`}>
           <img
@@ -70,12 +75,16 @@ function PlaceCardInner({
           />
         </Link>
       </div>
+
       <div className={INFO_CLASS_MAP[variant]}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">€{price}</b>
-            <span className="place-card__price-text">/&nbsp;night</span>
+            <span className="place-card__price-text">
+              /&nbsp;night
+            </span>
           </div>
+
           <button
             className={bookmarkButtonClassName}
             type="button"
@@ -83,25 +92,30 @@ function PlaceCardInner({
           >
             <svg
               className="place-card__bookmark-icon"
-              width={18}
-              height={19}
+              width={BOOKMARK_ICON_SIZE.width}
+              height={BOOKMARK_ICON_SIZE.height}
             >
               <use xlinkHref="#icon-bookmark" />
             </svg>
-            <span className="visually-hidden">{bookmarkButtonText}</span>
+            <span className="visually-hidden">
+              {bookmarkButtonText}
+            </span>
           </button>
         </div>
+
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
             <span style={{ width: ratingWidth }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
+
         <h2 className="place-card__name">
           <Link to={`${AppRoute.Offer}/${id}`}>
             {title}
           </Link>
         </h2>
+
         <p className="place-card__type">{type}</p>
       </div>
     </article>
@@ -111,7 +125,8 @@ function PlaceCardInner({
 const PlaceCard = memo(
   PlaceCardInner,
   (prevProps, nextProps) =>
-    prevProps.offer === nextProps.offer
-    && prevProps.onFavoriteToggle === nextProps.onFavoriteToggle
+    prevProps.offer === nextProps.offer &&
+    prevProps.onFavoriteToggle === nextProps.onFavoriteToggle
 );
+
 export default PlaceCard;

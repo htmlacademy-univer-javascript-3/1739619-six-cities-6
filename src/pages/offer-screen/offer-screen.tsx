@@ -1,6 +1,13 @@
 import {useCallback, useEffect, useMemo} from 'react';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, NEARBY_OFFERS_LIMIT} from '../../const.ts';
+import {
+  AppRoute,
+  AuthorizationStatus,
+  FavoriteStatus, HOST_AVATAR_SIZE,
+  NEARBY_OFFERS_LIMIT, OFFER_BOOKMARK_ICON_SIZE,
+  RATING_PERCENT_PER_STAR,
+  REVIEWS_LIMIT
+} from '../../const.ts';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewsList from '../../components/reviews-list/reviews-list.tsx';
 import Map from '../../components/map/map.tsx';
@@ -9,7 +16,7 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getCurrentOffer, getCurrentOfferLoadingStatus, getNearbyOffers} from '../../store/offer-details-data/selectors.ts';
 import {getReviews} from '../../store/reviews-data/selectors.ts';
 import {changeFavoriteStatusAction, fetchNearbyOffersAction, fetchOfferAction, fetchOfferReviewsAction} from '../../store/api-actions.ts';
-import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-data/selectors.ts';
 import {getFavoriteOffersCount} from '../../store/favorites-data/selectors.ts';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
@@ -30,6 +37,13 @@ export default function OfferScreen() {
     [nearbyOffersAll]
   );
 
+  const limitedReviews = useMemo(
+    () => [...offerReviews]
+      .sort((firstReview, secondReview) => new Date(secondReview.date).getTime() - new Date(firstReview.date).getTime())
+      .slice(0, REVIEWS_LIMIT),
+    [offerReviews]
+  );
+
   useEffect(() => {
     if (offerId) {
       dispatch(fetchOfferAction(offerId));
@@ -44,7 +58,7 @@ export default function OfferScreen() {
       return;
     }
 
-    const status = isFavorite ? 0 : 1;
+    const status = isFavorite ? FavoriteStatus.NotFavorite : FavoriteStatus.Favorite;
     dispatch(changeFavoriteStatusAction({offerId: id, status}));
   }, [authorizationStatus, dispatch, navigate]);
 
@@ -57,12 +71,14 @@ export default function OfferScreen() {
 
   const reviewsCount = offerReviews.length;
   const mapOffers = [currentOffer, ...nearbyOffers];
-  const ratingWidth = `${Math.round(currentOffer.rating) * 20}%`;
+  const ratingWidth = `${Math.round(currentOffer.rating) * RATING_PERCENT_PER_STAR}%`;
   const bookmarkButtonClassName = `offer__bookmark-button button${currentOffer.isFavorite ? ' offer__bookmark-button--active' : ''}`;
   const bookmarkButtonText = currentOffer.isFavorite ? 'In bookmarks' : 'To bookmarks';
   const offerType = `${currentOffer.type.charAt(0).toUpperCase()}${currentOffer.type.slice(1)}`;
   const bedroomsText = `${currentOffer.bedrooms} Bedroom${currentOffer.bedrooms !== 1 ? 's' : ''}`;
   const adultsText = `Max ${currentOffer.maxAdults} adult${currentOffer.maxAdults !== 1 ? 's' : ''}`;
+  const uniqueImages = Array.from(new Set(currentOffer.images));
+  const uniqueGoods = Array.from(new Set(currentOffer.goods));
 
   return (
     <div className="page">
@@ -71,7 +87,7 @@ export default function OfferScreen() {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images.map((image) => (
+              {uniqueImages.map((image) => (
                 <div className="offer__image-wrapper" key={image}>
                   <img
                     className="offer__image"
@@ -98,7 +114,7 @@ export default function OfferScreen() {
                   type="button"
                   onClick={() => handleFavoriteToggle(currentOffer.id, currentOffer.isFavorite)}
                 >
-                  <svg className="offer__bookmark-icon" width={31} height={33}>
+                  <svg className="offer__bookmark-icon" width={OFFER_BOOKMARK_ICON_SIZE.width} height={OFFER_BOOKMARK_ICON_SIZE.height}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
                   <span className="visually-hidden">{bookmarkButtonText}</span>
@@ -125,7 +141,7 @@ export default function OfferScreen() {
               <div className="offer__inside">
                 <h2 className="offer__inside-title">{'What\'s inside'}</h2>
                 <ul className="offer__inside-list">
-                  {currentOffer.goods.map((good) => (
+                  {uniqueGoods.map((good) => (
                     <li className="offer__inside-item" key={good}>
                       {good}
                     </li>
@@ -139,8 +155,8 @@ export default function OfferScreen() {
                     <img
                       className="offer__avatar user__avatar"
                       src={currentOffer.host.avatarUrl}
-                      width={74}
-                      height={74}
+                      width={HOST_AVATAR_SIZE.width}
+                      height={HOST_AVATAR_SIZE.height}
                       alt="Host avatar"
                     />
                   </div>
@@ -157,7 +173,7 @@ export default function OfferScreen() {
                 <h2 className="reviews__title">
                   Reviews · <span className="reviews__amount">{reviewsCount}</span>
                 </h2>
-                <ReviewsList reviews={offerReviews}/>
+                <ReviewsList reviews={limitedReviews}/>
                 {authorizationStatus === AuthorizationStatus.Auth && (
                   <CommentForm offerId={currentOffer.id}/>
                 )}

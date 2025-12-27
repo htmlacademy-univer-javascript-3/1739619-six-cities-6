@@ -1,12 +1,12 @@
 import {useCallback, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, FavoriteStatus, FOOTER_LOGO_SIZE} from '../../const.ts';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import PlaceCard from '../../components/place-card/place-card.tsx';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import Header from '../../components/header/header.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
-import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-data/selectors.ts';
 import {
   getFavoriteOffers,
   getFavoriteOffersCount,
@@ -35,7 +35,7 @@ export default function FavoritesScreen() {
   }, [authorizationStatus, dispatch]);
 
   const handleFavoriteToggle = useCallback((offerId: OfferPreview['id'], isFavorite: boolean) => {
-    const status = isFavorite ? 0 : 1;
+    const status = isFavorite ? FavoriteStatus.NotFavorite : FavoriteStatus.Favorite;
     dispatch(changeFavoriteStatusAction({offerId, status}));
   }, [dispatch]);
 
@@ -96,8 +96,8 @@ export default function FavoritesScreen() {
             className="footer__logo"
             src="../../../markup/img/logo.svg"
             alt="6 cities logo"
-            width={64}
-            height={33}
+            width={FOOTER_LOGO_SIZE.width}
+            height={FOOTER_LOGO_SIZE.height}
           />
         </Link>
       </footer>

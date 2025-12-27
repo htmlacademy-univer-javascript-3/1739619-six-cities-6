@@ -1,4 +1,5 @@
 import {Review as ReviewType} from '../../types/review';
+import {RATING_PERCENT_PER_STAR, USER_AVATAR_SIZE} from '../../const.ts';
 
 type ReviewProps = {
   review: ReviewType;
@@ -6,7 +7,7 @@ type ReviewProps = {
 
 export default function Review({review}: ReviewProps) {
   const {comment, date, rating, user} = review;
-  const ratingWidth = `${Math.round(rating) * 20}%`;
+  const ratingWidth = `${Math.round(rating) * RATING_PERCENT_PER_STAR}%`;
 
   const reviewDate = new Date(date);
   const formattedDate = reviewDate.toLocaleString('en-US', {month: 'long', year: 'numeric'});
@@ -19,8 +20,8 @@ export default function Review({review}: ReviewProps) {
           <img
             className="reviews__avatar user__avatar"
             src={user.avatarUrl}
-            width={54}
-            height={54}
+            width={USER_AVATAR_SIZE.width}
+            height={USER_AVATAR_SIZE.height}
             alt="Reviews avatar"
           />
         </div>

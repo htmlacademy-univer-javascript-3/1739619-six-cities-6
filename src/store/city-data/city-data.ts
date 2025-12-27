@@ -4,12 +4,12 @@ import {City} from '../../types/city.ts';
 
 const initialState: City = DEFAULT_CITY;
 
-export const cityProcess = createSlice({
+export const cityData = createSlice({
   name: NameSpace.City,
   initialState,
   reducers: {
-    changeCity: (_state, action: PayloadAction<City>) => action.payload,
+    currentCity: (_state, action: PayloadAction<City>) => action.payload,
   },
 });
 
-export const {changeCity} = cityProcess.actions;
+export const {currentCity} = cityData.actions;

@@ -1,16 +1,15 @@
-import {FormEvent, useEffect, useMemo, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {FormEvent, useState} from 'react';
+import {Navigate} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
-import {getAuthorizationStatus, getError} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus, getError} from '../../store/user-data/selectors.ts';
 import {AuthFormState} from '../../types/auth-form-state.ts';
 import HeaderLogo from '../../components/header-logo/header-logo.tsx';
-import AmsterdamLink from '../../components/amsterdam-link/amsterdam-link.tsx';
+import RandomCityLink from '../../components/random-city-link/random-city-link.tsx';
 
 export default function AuthScreen() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [formState, setFormState] = useState<AuthFormState>({
     data: {
@@ -21,13 +20,11 @@ export default function AuthScreen() {
   });
   const authError = useAppSelector(getError);
 
-  useEffect(() => {
-    if (authorizationStatus === AuthorizationStatus.Auth) {
-      navigate(AppRoute.Main);
-    }
-  }, [authorizationStatus, navigate]);
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    return <Navigate to={AppRoute.Main}/>;
+  }
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleLoginFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     const {email, password} = formState.data;
 
@@ -47,10 +44,7 @@ export default function AuthScreen() {
     dispatch(loginAction({login: email, password}));
   };
 
-  const errorMessage = useMemo(
-    () => formState.validation || authError || '',
-    [authError, formState.validation]
-  );
+  const errorMessage = formState.validation || authError || '';
 
   const {data} = formState;
 
@@ -67,7 +61,7 @@ export default function AuthScreen() {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
+            <form className="login__form form" action="#" method="post" onSubmit={handleLoginFormSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
                 <input
@@ -105,7 +99,7 @@ export default function AuthScreen() {
                 />
               </div>
               {errorMessage && (
-                <p className="login__error-message" role="alert" style={{ color: 'red' }}>
+                <p className="login__error-message" role="alert" style={{color: 'red'}}>
                   {errorMessage}
                 </p>
               )}
@@ -116,7 +110,7 @@ export default function AuthScreen() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <AmsterdamLink/>
+              <RandomCityLink/>
             </div>
           </section>
         </div>

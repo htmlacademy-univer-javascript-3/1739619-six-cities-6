@@ -1,5 +1,5 @@
 import {useState, memo} from 'react';
-import {SORTING_OPTIONS, SortingOption} from '../../const.ts';
+import {ARROW_ICON_SIZE, SORTING_OPTIONS, SortingOption} from '../../const.ts';
 
 type SortingOptionsProps = {
   activeSort: SortingOption;
@@ -9,11 +9,11 @@ type SortingOptionsProps = {
 function SortingOptionsInner({activeSort, onSortChange}: SortingOptionsProps) {
   const [isOpened, setIsOpened] = useState(false);
 
-  const handleToggle = () => {
+  const handleSortingTypeClick = () => {
     setIsOpened((prevIsOpened) => !prevIsOpened);
   };
 
-  const handleOptionSelect = (option: SortingOption) => () => {
+  const handleSortingOptionClick = (option: SortingOption) => () => {
     onSortChange(option);
     setIsOpened(false);
   };
@@ -24,10 +24,10 @@ function SortingOptionsInner({activeSort, onSortChange}: SortingOptionsProps) {
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={handleToggle}
+        onClick={handleSortingTypeClick}
       >
         {activeSort}
-        <svg className="places__sorting-arrow" width={7} height={4}>
+        <svg className="places__sorting-arrow" width={ARROW_ICON_SIZE.width} height={ARROW_ICON_SIZE.height}>
           <use xlinkHref="#icon-arrow-select"/>
         </svg>
       </span>
@@ -40,7 +40,7 @@ function SortingOptionsInner({activeSort, onSortChange}: SortingOptionsProps) {
             key={option}
             className={`places__option ${option === activeSort ? 'places__option--active' : ''}`.trim()}
             tabIndex={0}
-            onClick={handleOptionSelect(option)}
+            onClick={handleSortingOptionClick(option)}
           >
             {option}
           </li>

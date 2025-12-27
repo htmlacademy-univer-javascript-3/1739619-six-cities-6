@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {logoutAction} from '../../store/api-actions.ts';
-import {getAuthorizationStatus, getUserData} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus, getUserData} from '../../store/user-data/selectors.ts';
 import HeaderLogo from '../header-logo/header-logo.tsx';
 
 type HeaderProps = {
@@ -16,7 +16,7 @@ function HeaderInner({favoriteOffersCount = 0}: HeaderProps) {
   const userData = useAppSelector(getUserData);
   const isAuthorized = authorizationStatus === AuthorizationStatus.Auth;
 
-  const handleSignOut = () => {
+  const handleSignOutClick = () => {
     dispatch(logoutAction());
   };
 
@@ -41,7 +41,7 @@ function HeaderInner({favoriteOffersCount = 0}: HeaderProps) {
                       <span className="header__favorite-count">{favoriteOffersCount}</span>
                     </Link>
                   </li>
-                  <li className="header__nav-item user" onClick={handleSignOut}>
+                  <li className="header__nav-item user" onClick={handleSignOutClick}>
                     <a className="header__nav-link" >
                       <span className="header__signout">Sign out</span>
                     </a>

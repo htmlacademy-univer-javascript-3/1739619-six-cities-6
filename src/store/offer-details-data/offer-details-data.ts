@@ -6,7 +6,7 @@ import {NameSpace} from '../../const.ts';
 const initialState: OfferDetailsState = {
   data: null,
   isLoading: true,
-  nearby: [],
+  nearbyOffers: [],
 };
 
 export const offerDetailsData = createSlice({
@@ -27,10 +27,10 @@ export const offerDetailsData = createSlice({
         state.data = null;
       })
       .addCase(fetchNearbyOffersAction.fulfilled, (state, action) => {
-        state.nearby = action.payload;
+        state.nearbyOffers = action.payload;
       })
       .addCase(fetchNearbyOffersAction.rejected, (state) => {
-        state.nearby = [];
+        state.nearbyOffers = [];
       })
       .addCase(changeFavoriteStatusAction.fulfilled, (state, action) => {
         const updated = action.payload;
@@ -39,7 +39,7 @@ export const offerDetailsData = createSlice({
           Object.assign(state.data, updated);
         }
 
-        state.nearby = state.nearby.map((offer) =>
+        state.nearbyOffers = state.nearbyOffers.map((offer) =>
           offer.id === updated.id ? { ...offer, ...updated } : offer
         );
       });

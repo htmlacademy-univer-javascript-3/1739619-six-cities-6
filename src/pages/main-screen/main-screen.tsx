@@ -1,19 +1,27 @@
 import {useCallback, useEffect, useState, memo} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {CITY_NAMES, CITIES, SortingOption, CityName, AppRoute, AuthorizationStatus} from '../../const.ts';
+import {
+  CITY_NAMES,
+  CITIES,
+  SortingOption,
+  CityName,
+  AppRoute,
+  AuthorizationStatus,
+  FavoriteStatus
+} from '../../const.ts';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import {OfferPreview} from '../../types/offers-preview.ts';
 import Map from '../../components/map/map.tsx';
 import {useAppSelector, useAppDispatch} from '../../hooks';
-import {getCity} from '../../store/city-process/selectors.ts';
+import {getCity} from '../../store/city-data/selectors.ts';
 import {getOffersByCity, getOffersLoadingStatus} from '../../store/offers-data/selectors.ts';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
-import {changeCity} from '../../store/city-process/city-process.ts';
+import {currentCity} from '../../store/city-data/city-data.ts';
 import SortingOptions from '../../components/sorting-options/sorting-options.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
 import Header from '../../components/header/header.tsx';
 import NoOffers from '../../components/no-offers/no-offers.tsx';
-import {getAuthorizationStatus} from '../../store/user-process/selectors.ts';
+import {getAuthorizationStatus} from '../../store/user-data/selectors.ts';
 import {getFavoriteOffersCount} from '../../store/favorites-data/selectors.ts';
 import {changeFavoriteStatusAction} from '../../store/api-actions.ts';
 
@@ -24,8 +32,8 @@ function MainScreenInner() {
   const isOffersLoading = useAppSelector(getOffersLoadingStatus);
   const offersCount = offers.length;
   const favoriteOffersCount = useAppSelector(getFavoriteOffersCount);
-  const currentCity = useAppSelector(getCity);
-  const cityName = currentCity.name;
+  const selectedCity = useAppSelector(getCity);
+  const cityName = selectedCity.name;
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [selectedOfferId, setSelectedOfferId] = useState<OfferPreview['id'] | null>(null);
   const [currentSort, setCurrentSort] = useState<SortingOption>(SortingOption.Popular);
@@ -33,6 +41,8 @@ function MainScreenInner() {
   const [sortedOffers, setSortedOffers] = useState<OfferPreview[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
+
     let sorted;
     switch (currentSort) {
       case SortingOption.PriceLowToHigh:
@@ -47,13 +57,19 @@ function MainScreenInner() {
       default:
         sorted = [...offers];
     }
-    setSortedOffers(sorted);
+    if (isMounted) {
+      setSortedOffers(sorted);
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, [currentSort, offers]);
 
   const handleCityChange = useCallback((city: CityName) => {
     setSelectedOfferId(null);
     setCurrentSort(SortingOption.Popular);
-    dispatch(changeCity(CITIES[city]));
+    dispatch(currentCity(CITIES[city]));
   }, [dispatch]);
 
   const handleSortChange = useCallback((sort: SortingOption) => {
@@ -66,7 +82,7 @@ function MainScreenInner() {
       return;
     }
 
-    const status = isFavorite ? 0 : 1;
+    const status = isFavorite ? FavoriteStatus.NotFavorite : FavoriteStatus.Favorite;
     dispatch(changeFavoriteStatusAction({offerId, status}));
   }, [authorizationStatus, dispatch, navigate]);
 
@@ -101,14 +117,14 @@ function MainScreenInner() {
                     <SortingOptions activeSort={currentSort} onSortChange={handleSortChange}/>
                     <OffersList
                       offers={sortedOffers}
-                      setSelectedOfferId={setSelectedOfferId}
+                      onSelectedOfferIdChange={setSelectedOfferId}
                       variant='cities'
                       onFavoriteToggle={handleFavoriteToggle}
                     />
                   </section>
                   <div className="cities__right-section">
                     <Map
-                      city={currentCity}
+                      city={selectedCity}
                       offers={offers}
                       selectedOfferId={selectedOfferId}
                       className='cities__map map'

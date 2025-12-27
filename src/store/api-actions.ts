@@ -3,7 +3,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {OfferPreview} from '../types/offers-preview.ts';
 import {APIRoute, AuthorizationStatus, TIMEOUT_SHOW_ERROR} from '../const.ts';
 import {AppDispatch, State} from '../types/state.ts';
-import {requireAuthorization, setError} from './user-process/user-process.ts';
+import {errorReset, authorizationStatus} from './user-data/user-data.ts';
 import {UserData} from '../types/user-data.ts';
 import {AuthData} from '../types/auth-data.ts';
 import {dropToken, saveToken} from '../services/token.ts';
@@ -26,7 +26,7 @@ export const fetchOffersAction = createAsyncThunk<OfferPreview[], undefined, {
 export const fetchOfferAction = createAsyncThunk<Offer, OfferPreview['id'], {
   extra: AxiosInstance;
 }>(
-  'offer/fetchCurrentOffer',
+  'offerDetails/fetchCurrent',
   async (offerId, {extra: api}) => {
     const {data} = await api.get<Offer>(`${APIRoute.Offers}/${offerId}`);
 
@@ -37,7 +37,7 @@ export const fetchOfferAction = createAsyncThunk<Offer, OfferPreview['id'], {
 export const fetchNearbyOffersAction = createAsyncThunk<OfferPreview[], OfferPreview['id'], {
   extra: AxiosInstance;
 }>(
-  'offer/fetchNearbyOffers',
+  'offerDetails/fetchNearby',
   async (offerId, {extra: api}) => {
     const {data} = await api.get<OfferPreview[]>(`${APIRoute.Offers}/${offerId}/nearby`);
 
@@ -48,7 +48,7 @@ export const fetchNearbyOffersAction = createAsyncThunk<OfferPreview[], OfferPre
 export const fetchOfferReviewsAction = createAsyncThunk<Review[], OfferPreview['id'], {
   extra: AxiosInstance;
 }>(
-  'offer/fetchReviews',
+  'reviews/fetchForOffer',
   async (offerId, {extra: api}) => {
     const {data} = await api.get<Review[]>(`${APIRoute.Comments}/${offerId}`);
 
@@ -59,7 +59,7 @@ export const fetchOfferReviewsAction = createAsyncThunk<Review[], OfferPreview['
 export const fetchFavoritesAction = createAsyncThunk<OfferPreview[], undefined, {
   extra: AxiosInstance;
 }>(
-  'favorite/fetchFavorites',
+  'favorites/fetchCollection',
   async (_arg, {extra: api}) => {
     const {data} = await api.get<OfferPreview[]>(APIRoute.Favorite);
 
@@ -67,12 +67,27 @@ export const fetchFavoritesAction = createAsyncThunk<OfferPreview[], undefined, 
   }
 );
 
+export const checkAuthAction = createAsyncThunk<UserData, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'user/checkAuth',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api.get<UserData>(APIRoute.Login);
+
+    dispatch(fetchFavoritesAction());
+
+    return data;
+  },
+);
+
 export const changeFavoriteStatusAction = createAsyncThunk<Offer, FavoritesStatusData, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
-  'favorite/changeStatus',
+  'favorites/changeStatus',
   async ({offerId, status}, {extra: api}) => {
     const {data} = await api.post<Offer>(`${APIRoute.Favorite}/${offerId}/${status}`);
 
@@ -85,7 +100,7 @@ export const postOfferReviewAction = createAsyncThunk<Review[], ReviewData, {
   state: State;
   extra: AxiosInstance;
 }>(
-  'offer/postReview',
+  'reviews/postForOffer',
   async ({offerId, comment, rating}, {extra: api}) => {
     const {data} = await api.post<Review[] | Review>(`${APIRoute.Comments}/${offerId}`, {comment, rating});
 
@@ -118,18 +133,17 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   async (_arg, {dispatch, extra: api}) => {
     await api.delete(APIRoute.Logout);
     dropToken();
-    dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
+    dispatch(authorizationStatus(AuthorizationStatus.NoAuth));
   },
 );
 
-export const clearErrorAction = createAsyncThunk<void, undefined, {
-  dispatch: AppDispatch;
-}>(
-  'data/clearError',
-  (_arg, {dispatch}) => {
-    setTimeout(
-      () => dispatch(setError(null)),
-      TIMEOUT_SHOW_ERROR,
-    );
-  },
-);
+const delay = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+export const clearErrorAction = () =>
+  async (dispatch: AppDispatch): Promise<void> => {
+    await delay(TIMEOUT_SHOW_ERROR);
+    dispatch(errorReset());
+  };

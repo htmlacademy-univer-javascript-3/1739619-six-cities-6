@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import {AppRoute, HEADER_LOGO_SIZE} from '../../const';
 
 function HeaderLogoInner() {
   return (
@@ -10,8 +10,8 @@ function HeaderLogoInner() {
           className="header__logo"
           src="../../../markup/img/logo.svg"
           alt="6 cities logo"
-          width={81}
-          height={41}
+          width={HEADER_LOGO_SIZE.width}
+          height={HEADER_LOGO_SIZE.height}
         />
       </Link>
     </div>
