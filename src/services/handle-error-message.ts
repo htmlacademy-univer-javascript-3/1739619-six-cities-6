@@ -1,8 +1,18 @@
-import {store} from '../store';
 import {errorMessage} from '../store/user-data/user-data.ts';
 import {clearErrorAction} from '../store/api-actions.ts';
+import {AppDispatch} from '../types/state.ts';
+
+let dispatch: AppDispatch | null = null;
+
+export const bindErrorHandler = (appDispatch: AppDispatch): void => {
+  dispatch = appDispatch;
+};
 
 export const handleErrorMessage = (message: string): void => {
-  store.dispatch(errorMessage(message));
-  store.dispatch(clearErrorAction());
+  if (!dispatch) {
+    return;
+  }
+
+  dispatch(errorMessage(message));
+  dispatch(clearErrorAction());
 };

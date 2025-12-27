@@ -6,6 +6,7 @@ import { Action } from 'redux';
 import { AppThunkDispatch } from './mocks';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import {MemoryRouter} from 'react-router-dom';
 
 type ComponentWithMockStore = {
   withStoreComponent: JSX.Element;
@@ -28,5 +29,16 @@ export function withStore(
     mockStore,
     mockAxiosAdapter,
   });
+}
+
+export function withHistory(
+  component: JSX.Element,
+  initialEntries: string[] = ['/'],
+): JSX.Element {
+  return (
+    <MemoryRouter initialEntries={initialEntries}>
+      {component}
+    </MemoryRouter>
+  );
 }
 

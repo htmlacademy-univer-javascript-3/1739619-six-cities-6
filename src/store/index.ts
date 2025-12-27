@@ -1,6 +1,7 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {rootReducer} from './root-reducer.ts';
-import {createAPI} from '../services/api.ts';
+import { configureStore } from '@reduxjs/toolkit';
+import { rootReducer } from './root-reducer';
+import { createAPI } from '../services/api';
+import { bindErrorHandler } from '../services/handle-error-message';
 
 export const api = createAPI();
 
@@ -13,3 +14,5 @@ export const store = configureStore({
       },
     }),
 });
+
+bindErrorHandler(store.dispatch);
