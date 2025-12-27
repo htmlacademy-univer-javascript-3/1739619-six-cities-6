@@ -5,6 +5,15 @@ import {UserData} from '../types/user-data.ts';
 import {City} from '../types/city.ts';
 import {Location} from '../types/location.ts';
 import {User} from '../types/user.ts';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { createAPI } from '../services/api';
+import { State } from '../types/state';
+
+export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
+
+export const extractActionsTypes = (actions: Action<string>[]) =>
+  actions.map(({type}) => type);
 
 export const mockLocation: Location = {
   latitude: 52.370216,
