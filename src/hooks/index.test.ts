@@ -1,45 +1,45 @@
 import {renderHook} from '@testing-library/react';
-import {vi} from 'vitest';
-import {AuthorizationStatus, NameSpace} from '../const';
+import {describe, expect, it, vi} from 'vitest';
+import type {State, AppDispatch} from '../types/state';
 import {useAppDispatch, useAppSelector} from './index';
-import {makeFakeStore} from '../utils/mocks';
-import {State} from '../types/state';
 
-const {useDispatchMock, useSelectorMock} = vi.hoisted((): {
-  useDispatchMock: ReturnType<typeof vi.fn>;
-  useSelectorMock: ReturnType<typeof vi.fn>;
-} => ({
-  useDispatchMock: vi.fn(),
-  useSelectorMock: vi.fn(),
+const {useDispatchMock, useSelectorMock, dispatchMock} = vi.hoisted(() => {
+  const mockState = {} as State;
+
+  const dispatch = vi.fn() as AppDispatch;
+
+  const useDispatch = vi.fn(() => dispatch);
+
+  const useSelector = vi.fn(<T,>(selector: (state: State) => T) => selector(mockState));
+
+  return {
+    useDispatchMock: useDispatch,
+    useSelectorMock: useSelector,
+    dispatchMock: dispatch,
+  };
+});
+
+vi.mock('react-redux', () => ({
+  useDispatch: useDispatchMock,
+  useSelector: useSelectorMock,
 }));
 
-const mockState = makeFakeStore(AuthorizationStatus.Auth) as State;
-
-const mockReactRedux = vi.hoisted(() => ({
-  useDispatch: vi.fn(() => useDispatchMock),
-  useSelector: vi.fn((selector: (state: State) => unknown) => {
-    useSelectorMock(selector);
-    return selector(mockState);
-  }),
-}));
-
-vi.mock('react-redux', () => mockReactRedux);
-
-describe('Hooks: useAppDispatch/useAppSelector', () => {
-  it('should return react-redux dispatch', () => {
+describe('hooks: useAppDispatch/useAppSelector', () => {
+  it('useAppDispatch should return dispatch from react-redux', () => {
     const {result} = renderHook(() => useAppDispatch());
 
-    expect(result.current).toBe(useDispatchMock);
-    expect(mockReactRedux.useDispatch).toHaveBeenCalledTimes(1);
+    expect(useDispatchMock).toHaveBeenCalledTimes(1);
+    expect(result.current).toBe(dispatchMock);
   });
 
-  it('should return selected state from react-redux', () => {
+  it('useAppSelector should return selected value', () => {
+    const expected = 'OK';
+
     const {result} = renderHook(() =>
-      useAppSelector((state) => state[NameSpace.Auth].status)
+      useAppSelector(() => expected)
     );
 
-    expect(result.current).toBe(AuthorizationStatus.Auth);
-    expect(mockReactRedux.useSelector).toHaveBeenCalledTimes(1);
     expect(useSelectorMock).toHaveBeenCalledTimes(1);
+    expect(result.current).toBe(expected);
   });
 });
