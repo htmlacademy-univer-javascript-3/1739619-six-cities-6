@@ -9,6 +9,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { createAPI } from '../services/api';
 import { State } from '../types/state';
+import {AuthorizationStatus, DEFAULT_CITY, NameSpace} from '../const.ts';
 
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
 
@@ -72,4 +73,21 @@ export const makeFakeUserData = (): UserData => ({
   id: 1,
   email: 'test@test.com',
   token: 'token',
+});
+
+export const makeFakeStore = (
+  authorizationStatus: AuthorizationStatus = AuthorizationStatus.NoAuth,
+  overrides: Partial<State> = {},
+): Partial<State> => ({
+  [NameSpace.City]: DEFAULT_CITY,
+  [NameSpace.Offers]: {items: [], isLoading: false},
+  [NameSpace.OfferDetails]: {data: null, isLoading: false, nearbyOffers: []},
+  [NameSpace.Reviews]: {items: [], isPosting: false},
+  [NameSpace.Auth]: {
+    status: authorizationStatus,
+    user: authorizationStatus === AuthorizationStatus.Auth ? makeFakeUserData() : null,
+    error: null,
+  },
+  [NameSpace.Favorites]: {items: [], isLoading: false},
+  ...overrides,
 });
