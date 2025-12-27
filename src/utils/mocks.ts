@@ -10,6 +10,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { createAPI } from '../services/api';
 import { State } from '../types/state';
 import {AuthorizationStatus, DEFAULT_CITY, NameSpace} from '../const.ts';
+import {vi} from 'vitest';
 
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
 
@@ -91,3 +92,22 @@ export const makeFakeStore = (
   [NameSpace.Favorites]: {items: [], isLoading: false},
   ...overrides,
 });
+
+
+export const {useDispatchMock, useSelectorMock} = vi.hoisted((): {
+  useDispatchMock: ReturnType<typeof vi.fn>;
+  useSelectorMock: ReturnType<typeof vi.fn>;
+} => ({
+  useDispatchMock: vi.fn(),
+  useSelectorMock: vi.fn(),
+}));
+
+export const mockState = makeFakeStore(AuthorizationStatus.Auth) as State;
+
+export const mockReactRedux = vi.hoisted(() => ({
+  useDispatch: vi.fn(() => useDispatchMock),
+  useSelector: vi.fn((selector: (state: State) => unknown) => {
+    useSelectorMock(selector);
+    return selector(mockState);
+  }),
+}));
