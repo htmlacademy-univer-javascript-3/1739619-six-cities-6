@@ -54,7 +54,6 @@ describe('Component: SortingOptions', () => {
 
     const nextOption = SORTING_OPTIONS[1];
 
-    // ✅ кликаем по li, а не по span
     const optionItems = container.querySelectorAll('.places__option');
     const nextLi = Array.from(optionItems).find((li) => li.textContent?.trim() === nextOption) as HTMLElement;
 
