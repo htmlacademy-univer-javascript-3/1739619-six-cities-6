@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 import NotFound from './not-found-page';
-import {withHistory} from '../../utils/mock-component';
+import {withHistory} from '../../hocs';
 import {AppRoute} from '../../const';
 
 describe('Page: NotFound', () => {

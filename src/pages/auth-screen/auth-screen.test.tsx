@@ -3,9 +3,9 @@ import userEvent from '@testing-library/user-event';
 import {Route, Routes} from 'react-router-dom';
 import {vi} from 'vitest';
 import AuthScreen from './auth-screen';
-import {withHistory, withStore} from '../../utils/mock-component';
+import {withHistory, withStore} from '../../hocs';
 import {AuthorizationStatus, AppRoute} from '../../const';
-import {makeFakeStore} from '../../utils/mocks';
+import {makeFakeStore} from '../../utils';
 import {loginAction} from '../../store/api-actions';
 
 vi.mock('../../store/api-actions', () => ({

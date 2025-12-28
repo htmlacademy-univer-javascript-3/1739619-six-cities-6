@@ -1,9 +1,9 @@
 import {render, screen} from '@testing-library/react';
 import {Route, Routes} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../const';
-import {withHistory, withStore} from '../../utils/mock-component';
+import {withHistory, withStore} from '../../hocs';
 import ProtectedRoute from './protected-route';
-import {makeFakeStore} from '../../utils/mocks';
+import {makeFakeStore} from '../../utils';
 
 const publicRouteText = 'public route';
 const privateRouteText = 'private route';

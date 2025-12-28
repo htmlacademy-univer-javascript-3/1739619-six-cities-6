@@ -1,10 +1,10 @@
 import {FormEvent, useState} from 'react';
 import {Navigate} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus, passwordStrengthRegex} from '../../const.ts';
+import {AppRoute, AuthorizationStatus, PASSWORD_STRENGTH_REGEX} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {loginAction} from '../../store/api-actions.ts';
 import {getAuthorizationStatus, getError} from '../../store/user-data/selectors.ts';
-import {AuthFormState} from '../../types/auth-form-state.ts';
+import {AuthFormState} from '../../types';
 import HeaderLogo from '../../components/header-logo/header-logo.tsx';
 import RandomCityLink from '../../components/random-city-link/random-city-link.tsx';
 
@@ -28,7 +28,7 @@ export default function AuthScreen() {
     evt.preventDefault();
     const {email, password} = formState.data;
 
-    const passwordHasLetterAndNumber = passwordStrengthRegex.test(password);
+    const passwordHasLetterAndNumber = PASSWORD_STRENGTH_REGEX.test(password);
 
     if (!email || !password.trim()) {
       setFormState((prev) => ({...prev, validation: 'Введите email и пароль.'}));

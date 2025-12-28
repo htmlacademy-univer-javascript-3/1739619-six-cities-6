@@ -1,9 +1,9 @@
 import { MockStore, configureMockStore } from '@jedmao/redux-mock-store';
 import MockAdapter from 'axios-mock-adapter';
-import { State } from '../types/state';
-import { createAPI } from '../services/api';
+import { State } from '../types';
+import { createAPI } from '../services';
 import { Action } from 'redux';
-import { AppThunkDispatch } from './mocks';
+import { AppThunkDispatch } from '../utils';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import {MemoryRouter} from 'react-router-dom';

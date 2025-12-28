@@ -2,9 +2,9 @@ import {render, screen} from '@testing-library/react';
 import {Route, Routes} from 'react-router-dom';
 import {vi} from 'vitest';
 import OfferScreen from './offer-screen';
-import {withHistory, withStore} from '../../utils/mock-component';
+import {withHistory, withStore} from '../../hocs';
 import {AuthorizationStatus, AppRoute, NameSpace} from '../../const';
-import {makeFakeOffer, makeFakeOfferPreview, makeFakeReview, makeFakeStore} from '../../utils/mocks';
+import {makeFakeOffer, makeFakeOfferPreview, makeFakeReview, makeFakeStore} from '../../utils';
 
 vi.mock('../../components/map/map.tsx', () => ({
   default: () => <div data-testid="map" />,

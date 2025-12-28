@@ -1,4 +1,4 @@
-import {Location} from './types/location.ts';
+import {Location} from './types';
 
 export enum AppRoute {
   Main = '/',
@@ -76,7 +76,7 @@ export const ARROW_ICON_SIZE = {
 } as const;
 
 // Проверяет, что строка содержит минимум одну букву и одну цифру
-export const passwordStrengthRegex = /(?=.*[a-zA-Z])(?=.*\d)/;
+export const PASSWORD_STRENGTH_REGEX = /(?=.*[a-zA-Z])(?=.*\d)/;
 
 export const URL_MARKERS = {
   default: '../public/img/pin.svg',

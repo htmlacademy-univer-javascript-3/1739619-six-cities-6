@@ -2,8 +2,8 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {vi} from 'vitest';
 import NearPlacesList from './near-places-list';
-import {makeFakeOfferPreview} from '../../utils/mocks';
-import {withHistory} from '../../utils/mock-component';
+import {makeFakeOfferPreview} from '../../utils';
+import {withHistory} from '../../hocs';
 
 describe('Component: NearPlacesList', () => {
   it('should render offers and handle favorite toggle', async () => {

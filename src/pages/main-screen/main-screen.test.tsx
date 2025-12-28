@@ -1,9 +1,9 @@
 import {render, screen} from '@testing-library/react';
 import {vi} from 'vitest';
 import MainScreen from './main-screen';
-import {withHistory, withStore} from '../../utils/mock-component';
+import {withHistory, withStore} from '../../hocs';
 import {AuthorizationStatus, NameSpace} from '../../const';
-import {makeFakeOfferPreview, makeFakeStore, mockCity} from '../../utils/mocks';
+import {makeFakeOfferPreview, makeFakeStore, mockCity} from '../../utils';
 
 vi.mock('../../components/map/map.tsx', () => ({
   default: () => <div data-testid="map" />,

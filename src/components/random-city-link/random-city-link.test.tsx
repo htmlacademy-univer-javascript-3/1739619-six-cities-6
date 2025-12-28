@@ -2,10 +2,10 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {vi} from 'vitest';
 import RandomCityLink from './random-city-link';
-import {withHistory} from '../../utils/mock-component';
+import {withHistory} from '../../hocs';
 import {CITIES, CITY_NAMES} from '../../const';
 import {currentCity} from '../../store/city-data/city-data';
-import {useDispatchMock} from '../../utils/mocks';
+import {useDispatchMock} from '../../utils';
 
 vi.mock('react-redux', async () => {
   const { mockReactRedux } = await import('../../utils/mocks');

@@ -1,8 +1,8 @@
 import {fireEvent, render, screen} from '@testing-library/react';
 import {vi} from 'vitest';
 import OffersList from './offers-list';
-import {makeFakeOfferPreview} from '../../utils/mocks';
-import {withHistory} from '../../utils/mock-component';
+import {makeFakeOfferPreview} from '../../utils';
+import {withHistory} from '../../hocs';
 
 describe('Component: OffersList', () => {
   it('should render fallback when no offers', () => {
