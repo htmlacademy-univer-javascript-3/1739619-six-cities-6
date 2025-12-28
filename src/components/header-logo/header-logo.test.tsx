@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/react';
 import HeaderLogo from './header-logo';
 import {AppRoute, HEADER_LOGO_SIZE} from '../../const';
-import {withHistory} from '../../utils/mock-component';
+import {withHistory} from '../../hocs';
 
 describe('Component: HeaderLogo', () => {
   it('should render correctly', () => {

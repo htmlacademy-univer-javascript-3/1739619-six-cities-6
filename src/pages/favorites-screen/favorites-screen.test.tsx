@@ -1,9 +1,9 @@
 import {render, screen} from '@testing-library/react';
 import {vi} from 'vitest';
 import FavoritesScreen from './favorites-screen';
-import {withHistory, withStore} from '../../utils/mock-component';
+import {withHistory, withStore} from '../../hocs';
 import {AuthorizationStatus, NameSpace} from '../../const';
-import {makeFakeOfferPreview, makeFakeStore} from '../../utils/mocks';
+import {makeFakeOfferPreview, makeFakeStore} from '../../utils';
 import {fetchFavoritesAction} from '../../store/api-actions';
 
 vi.mock('../../store/api-actions', () => ({

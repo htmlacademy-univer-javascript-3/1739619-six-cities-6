@@ -2,10 +2,10 @@ import {render, screen} from '@testing-library/react';
 import {useLocation} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import MockAdapter from 'axios-mock-adapter';
-import {AuthorizationStatus, NameSpace} from '../const';
-import {makeFakeStore} from './mocks';
-import {State} from '../types/state';
-import {withHistory, withStore} from './mock-component';
+import {AuthorizationStatus, NameSpace} from '../const.ts';
+import {makeFakeStore} from '../utils';
+import {State} from '../types';
+import {withHistory, withStore} from './mock-component.tsx';
 
 describe('HOC: withStore', () => {
   it('should wrap component with redux provider', () => {

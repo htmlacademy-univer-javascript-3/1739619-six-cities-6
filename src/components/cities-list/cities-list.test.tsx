@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import {vi} from 'vitest';
 import CitiesList from './cities-list';
 import {CITY_NAMES} from '../../const';
-import {withHistory} from '../../utils/mock-component';
+import {withHistory} from '../../hocs';
 
 describe('Component: CitiesList', () => {
   it('should highlight active city and notify about change', async () => {

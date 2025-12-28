@@ -1,8 +1,8 @@
 import {render, screen} from '@testing-library/react';
 import App from './app';
 import {APIRoute, AppRoute, AuthorizationStatus, NameSpace} from '../const';
-import {withStore} from '../utils/mock-component';
-import {makeFakeStore} from '../utils/mocks';
+import {withStore} from '../hocs';
+import {makeFakeStore} from '../utils';
 
 describe('Application Routing', () => {
   it('should render "MainScreen" when user navigate to "/"', () => {

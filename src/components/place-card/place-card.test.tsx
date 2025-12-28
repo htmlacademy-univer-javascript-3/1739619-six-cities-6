@@ -2,8 +2,8 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {vi} from 'vitest';
 import PlaceCard from './place-card';
-import {makeFakeOfferPreview} from '../../utils/mocks';
-import {withHistory} from '../../utils/mock-component';
+import {makeFakeOfferPreview} from '../../utils';
+import {withHistory} from '../../hocs';
 import {PREMIUM_LABEL} from './place-card.const';
 
 describe('Component: PlaceCard', () => {

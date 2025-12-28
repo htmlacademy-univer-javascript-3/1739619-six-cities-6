@@ -8,7 +8,7 @@ type DetailMessageType = {
   message: string;
 }
 
-const errorStatusCodes = new Set<number>([
+const errorStatusCodes = new Set<StatusCodes>([
   StatusCodes.BAD_REQUEST,
   StatusCodes.UNAUTHORIZED,
   StatusCodes.NOT_FOUND

@@ -5,8 +5,8 @@ import Header from './header';
 import {AuthorizationStatus, AppRoute} from '../../const';
 import {getAuthorizationStatus, getUserData} from '../../store/user-data/selectors';
 import {logoutAction} from '../../store/api-actions';
-import {withHistory} from '../../utils/mock-component';
-import {State} from '../../types/state.ts';
+import {withHistory} from '../../hocs';
+import {State} from '../../types';
 
 const selectorMock = vi.fn(<TSelected,>(selector: (state: State) => TSelected) =>
   selector({} as State)
